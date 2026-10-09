@@ -265,3 +265,11 @@ function loadReport() {
 
   alert("📂 تم استرجاع التقرير بنجاح");
 }
+
+(function(){
+  var nativePrint = window.print ? window.print.bind(window) : null;
+  window.print = function(){
+    if (window.AndroidPrint) { window.AndroidPrint.print(); }
+    else if (nativePrint) { nativePrint(); }
+  };
+})();
