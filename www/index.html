@@ -1,0 +1,3871 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>نظام تسجيل الأمراض</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
+
+</head>
+
+<body>
+
+<!-- ================= شاشة تسجيل الدخول ================= -->
+
+<div id="loginPage" class="login-page">
+
+  <div class="login-box">
+
+    <img src="assets/logo.png" alt="شعار النظام" class="login-logo">
+    
+    <!-- النص الرسمي تحت الشعار -->
+
+    <div class="login-title">
+      الجمهورية اليمنية<br>
+      <span>وزارة الصحة والبيئة</span><br>
+      <small>قطاع الرعاية الصحية الأولية</small>
+    </div>
+
+    <h2>🔒 تسجيل الدخول</h2>
+
+    <input type="text" id="username" placeholder="اسم المستخدم">
+
+    <input type="password" id="password" placeholder="كلمة المرور">
+
+    <button onclick="login()">تسجيل الدخول</button>
+
+    <div id="loginError"></div>
+
+    <!-- توقيع المطور -->
+
+    <div class="developerSignature">
+      برمجة وتصميم <br>
+      D / Salah Al-ahdel
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ================= صفحة اختيار المرفق الصحي ================= -->
+<div id="healthFacilitiesPage" style="display:none;">
+  <h2>🏥 المرافق الصحية</h2>
+  <ul id="facilitiesList">
+    <li onclick="selectFacility(this)">مستشفى العدين العام</li>
+    <li onclick="selectFacility(this)">المركز الصحي بلادالمليكي</li>
+    <li onclick="selectFacility(this)">المركز الصحي الرئاس</li>
+    <li onclick="selectFacility(this)">المركز الصحي الجبلين</li>
+  </ul>
+</div>
+
+<!-- ================= الصفحة الرئيسية / داشبورد ================= -->
+<div id="dashboard" style="display:none;">
+  <header class="main-header">
+    <img src="assets/logo.png" alt="شعار المرفق الصحي" class="logo">
+    <div class="gov-title">
+      الجمهورية اليمنية<br>
+      <span>وزارة الصحة والبيئة</span><br>
+      <small>الإحصاء الصحي</small>
+    </div>
+    <h2 id="currentFacilityName" style="margin-top:10px;color:#fff;"></h2>
+
+    <!-- شريط المعلومات -->
+    <div class="location-bar">
+      <div class="field">
+        <label>المحافظة:</label>
+        <select id="governorate" onchange="populateDistricts()">
+          <option value="">اختر المحافظة</option>
+          <option value="صنعاء">صنعاء</option>
+          <option value="عدن">عدن</option>
+          <option value="تعز">تعز</option>
+          <option value="إب">إب</option>
+          <option value="الحديدة">الحديدة</option>
+          <option value="ذمار">ذمار</option>
+          <option value="حجة">حجة</option>
+          <option value="عمران">عمران</option>
+          <option value="ريمة">ريمة</option>
+          <option value="المحويت">المحويت</option>
+          <option value="البيضاء">البيضاء</option>
+          <option value="مأرب">مأرب</option>
+          <option value="الجوف">الجوف</option>
+          <option value="صعدة">صعدة</option>
+          <option value="شبوة">شبوة</option>
+          <option value="حضرموت">حضرموت</option>
+          <option value="المهرة">المهرة</option>
+          <option value="أبين">أبين</option>
+          <option value="لحج">لحج</option>
+          <option value="الضالع">الضالع</option>
+          <option value="سقطرى">سقطرى</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>المديرية:</label>
+        <select id="district">
+          <option value="">اختر المديرية</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>المرفق الصحي:</label>
+        <select id="facilityName" onchange="selectFacility(this)">
+          <option value="">-- اختر المرفق الصحي --</option>
+          <option value="مستشفى العدين العام">مستشفى العدين العام</option>
+          <option value="المركز الصحي بلادالمليكي">المركز الصحي بلادالمليكي</option>
+          <option value="المركز الصحي الرئاس">المركز الصحي الرئاس</option>
+          <option value="المركز الصحي الجبلين">المركز الصحي الجبلين</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>الشهر:</label>
+        <select id="month">
+          <option value="1">يناير</option>
+          <option value="2">فبراير</option>
+          <option value="3">مارس</option>
+          <option value="4">أبريل</option>
+          <option value="5">مايو</option>
+          <option value="6">يونيو</option>
+          <option value="7">يوليو</option>
+          <option value="8">أغسطس</option>
+          <option value="9">سبتمبر</option>
+          <option value="10">أكتوبر</option>
+          <option value="11">نوفمبر</option>
+          <option value="12">ديسمبر</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>السنة:</label>
+        <select id="year">
+          <option>2024</option>
+          <option>2025</option>
+          <option selected>2026</option>
+          <option>2027</option>
+          <option>2028</option>
+        </select>
+      </div>
+
+    </div> <!-- نهاية location-bar -->
+  </header>
+
+
+  <!-- ===================== G1: الأمراض المعوية ===================== -->
+  <div id="G1" class="group">
+    <h2>💧 الأمراض المعوية</h2>
+    <div class="subtab">
+      <button class="subtablinks active" onclick="openSubTab(event,'Cholera')">💧 الكوليرا</button>
+      <button class="subtablinks" onclick="openSubTab(event,'Typhoid')">🧫 حمى التيفود</button>
+      <button class="subtablinks" onclick="openSubTab(event,'Shigellosis')">🦠 داء الشيغيليات</button>
+      <button class="subtablinks" onclick="openSubTab(event,'OtherBacterial')">🦠 عدوى أخرى جرثومية</button>
+      <button class="subtablinks" onclick="openSubTab(event,'FoodPoisoning')">☠️ التسمم الغذائي</button>
+      <button class="subtablinks" onclick="openSubTab(event,'ViralInfections')">🧬 عدوى معوية فيروسية</button>
+      <button class="subtablinks" onclick="openSubTab(event,'Diarrhea')">💦 الإسهالات</button>
+    </div>
+
+    <!-- ===== الكوليرا ===== -->
+    <div id="Cholera" class="subtabcontent" style="display:block;">
+      <h4>💧 الكوليرا</h4>
+      <table>
+        <tr><th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th></tr>
+        <tr id="Cholera_male"><td>ذكور</td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td class="total" id="Cholera_maleTotal">0</td>
+        </tr>
+        <tr id="Cholera_female"><td>إناث</td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td class="total" id="Cholera_femaleTotal">0</td>
+        </tr>
+        <tr class="total"><td>الإجمالي الكلي</td>
+          <td id="Cholera_t1">0</td>
+          <td id="Cholera_t2">0</td>
+          <td id="Cholera_t3">0</td>
+          <td id="Cholera_t4">0</td>
+          <td id="Cholera_t5">0</td>
+          <td id="Cholera_grandTotal">0</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ===== حمى التيفود ===== -->
+    <div id="Typhoid" class="subtabcontent">
+      <h4>🧫 حمى التيفود والباراتيفود</h4>
+      <table>
+        <tr><th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th></tr>
+        <tr id="Typhoid_male"><td>ذكور</td>
+          <td><input type="number" oninput="calculate('Typhoid')"></td>
+          <td><input type="number" oninput="calculate('Typhoid')"></td>
+          <td><input type="number" oninput="calculate('Typhoid')"></td>
+          <td><input type="number" oninput="calculate('Typhoid')"></td>
+          <td><input type="number" oninput="calculate('Typhoid')"></td>
+          <td class="total" id="Typhoid_maleTotal">0</td>
+        </tr>
+        <tr id="Typhoid_female"><td>إناث</td>
+          <td><input type="number" oninput="calculate('Typhoid')"></td>
+          <td><input type="number" oninput="calculate('Typhoid')"></td>
+          <td><input type="number" oninput="calculate('Typhoid')"></td>
+          <td><input type="number" oninput="calculate('Typhoid')"></td>
+          <td><input type="number" oninput="calculate('Typhoid')"></td>
+          <td class="total" id="Typhoid_femaleTotal">0</td>
+        </tr>
+        <tr class="total"><td>الإجمالي الكلي</td>
+          <td id="Typhoid_t1">0</td>
+          <td id="Typhoid_t2">0</td>
+          <td id="Typhoid_t3">0</td>
+          <td id="Typhoid_t4">0</td>
+          <td id="Typhoid_t5">0</td>
+          <td id="Typhoid_grandTotal">0</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ===== داء الشيغيليات ===== -->
+    <div id="Shigellosis" class="subtabcontent">
+      <h4>🦠 داء الشيغيليات (الدسنتاريا)</h4>
+      <table>
+        <tr><th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th></tr>
+        <tr id="Shigellosis_male"><td>ذكور</td>
+          <td><input type="number" oninput="calculate('Shigellosis')"></td>
+          <td><input type="number" oninput="calculate('Shigellosis')"></td>
+          <td><input type="number" oninput="calculate('Shigellosis')"></td>
+          <td><input type="number" oninput="calculate('Shigellosis')"></td>
+          <td><input type="number" oninput="calculate('Shigellosis')"></td>
+          <td class="total" id="Shigellosis_maleTotal">0</td>
+        </tr>
+        <tr id="Shigellosis_female"><td>إناث</td>
+          <td><input type="number" oninput="calculate('Shigellosis')"></td>
+          <td><input type="number" oninput="calculate('Shigellosis')"></td>
+          <td><input type="number" oninput="calculate('Shigellosis')"></td>
+          <td><input type="number" oninput="calculate('Shigellosis')"></td>
+          <td><input type="number" oninput="calculate('Shigellosis')"></td>
+          <td class="total" id="Shigellosis_femaleTotal">0</td>
+        </tr>
+        <tr class="total"><td>الإجمالي الكلي</td>
+          <td id="Shigellosis_t1">0</td>
+          <td id="Shigellosis_t2">0</td>
+          <td id="Shigellosis_t3">0</td>
+          <td id="Shigellosis_t4">0</td>
+          <td id="Shigellosis_t5">0</td>
+          <td id="Shigellosis_grandTotal">0</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ===== عدوى أخرى جرثومية ===== -->
+    <div id="OtherBacterial" class="subtabcontent">
+      <h4>🦠 عدوى أخرى جرثومية</h4>
+      <table>
+        <tr><th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th></tr>
+        <tr id="OtherBacterial_male"><td>ذكور</td>
+          <td><input type="number" oninput="calculate('OtherBacterial')"></td>
+          <td><input type="number" oninput="calculate('OtherBacterial')"></td>
+          <td><input type="number" oninput="calculate('OtherBacterial')"></td>
+          <td><input type="number" oninput="calculate('OtherBacterial')"></td>
+          <td><input type="number" oninput="calculate('OtherBacterial')"></td>
+          <td class="total" id="OtherBacterial_maleTotal">0</td>
+        </tr>
+        <tr id="OtherBacterial_female"><td>إناث</td>
+          <td><input type="number" oninput="calculate('OtherBacterial')"></td>
+          <td><input type="number" oninput="calculate('OtherBacterial')"></td>
+          <td><input type="number" oninput="calculate('OtherBacterial')"></td>
+          <td><input type="number" oninput="calculate('OtherBacterial')"></td>
+          <td><input type="number" oninput="calculate('OtherBacterial')"></td>
+          <td class="total" id="OtherBacterial_femaleTotal">0</td>
+        </tr>
+        <tr class="total"><td>الإجمالي الكلي</td>
+          <td id="OtherBacterial_t1">0</td>
+          <td id="OtherBacterial_t2">0</td>
+          <td id="OtherBacterial_t3">0</td>
+          <td id="OtherBacterial_t4">0</td>
+          <td id="OtherBacterial_t5">0</td>
+          <td id="OtherBacterial_grandTotal">0</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ===== التسمم الغذائي ===== -->
+    <div id="FoodPoisoning" class="subtabcontent">
+      <h4>☠️ التسمم الغذائي الجرثومي</h4>
+      <table>
+        <tr><th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th></tr>
+        <tr id="FoodPoisoning_male"><td>ذكور</td>
+          <td><input type="number" oninput="calculate('FoodPoisoning')"></td>
+          <td><input type="number" oninput="calculate('FoodPoisoning')"></td>
+          <td><input type="number" oninput="calculate('FoodPoisoning')"></td>
+          <td><input type="number" oninput="calculate('FoodPoisoning')"></td>
+          <td><input type="number" oninput="calculate('FoodPoisoning')"></td>
+          <td class="total" id="FoodPoisoning_maleTotal">0</td>
+        </tr>
+        <tr id="FoodPoisoning_female"><td>إناث</td>
+          <td><input type="number" oninput="calculate('FoodPoisoning')"></td>
+          <td><input type="number" oninput="calculate('FoodPoisoning')"></td>
+          <td><input type="number" oninput="calculate('FoodPoisoning')"></td>
+          <td><input type="number" oninput="calculate('FoodPoisoning')"></td>
+          <td><input type="number" oninput="calculate('FoodPoisoning')"></td>
+          <td class="total" id="FoodPoisoning_femaleTotal">0</td>
+        </tr>
+        <tr class="total"><td>الإجمالي الكلي</td>
+          <td id="FoodPoisoning_t1">0</td>
+          <td id="FoodPoisoning_t2">0</td>
+          <td id="FoodPoisoning_t3">0</td>
+          <td id="FoodPoisoning_t4">0</td>
+          <td id="FoodPoisoning_t5">0</td>
+          <td id="FoodPoisoning_grandTotal">0</td>
+        </tr>
+      </table>
+    </div>
+<!-- ===== عدوى معوية فيروسية ===== -->
+    <div id="ViralInfections" class="subtabcontent">
+      <h4>🧬 عدوى معوية فيروسية</h4>
+      <table>
+        <tr><th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th></tr>
+        <tr id="ViralInfections_male"><td>ذكور</td>
+          <td><input type="number" oninput="calculate('ViralInfections')"></td>
+          <td><input type="number" oninput="calculate('ViralInfections')"></td>
+          <td><input type="number" oninput="calculate('ViralInfections')"></td>
+          <td><input type="number" oninput="calculate('ViralInfections')"></td>
+          <td><input type="number" oninput="calculate('ViralInfections')"></td>
+          <td class="total" id="ViralInfections_maleTotal">0</td>
+        </tr>
+        <tr id="ViralInfections_female"><td>إناث</td>
+          <td><input type="number" oninput="calculate('ViralInfections')"></td>
+          <td><input type="number" oninput="calculate('ViralInfections')"></td>
+          <td><input type="number" oninput="calculate('ViralInfections')"></td>
+          <td><input type="number" oninput="calculate('ViralInfections')"></td>
+          <td><input type="number" oninput="calculate('ViralInfections')"></td>
+          <td class="total" id="ViralInfections_femaleTotal">0</td>
+        </tr>
+        <tr class="total"><td>الإجمالي الكلي</td>
+          <td id="ViralInfections_t1">0</td>
+          <td id="ViralInfections_t2">0</td>
+          <td id="ViralInfections_t3">0</td>
+          <td id="ViralInfections_t4">0</td>
+          <td id="ViralInfections_t5">0</td>
+          <td id="ViralInfections_grandTotal">0</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ===== الإسهالات ===== -->
+    <div id="Diarrhea" class="subtabcontent">
+      <h4>💦 الإسهالات</h4>
+      <table>
+        <tr><th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th></tr>
+        <tr id="Diarrhea_male"><td>ذكور</td>
+          <td><input type="number" oninput="calculate('Diarrhea')"></td>
+          <td><input type="number" oninput="calculate('Diarrhea')"></td>
+          <td><input type="number" oninput="calculate('Diarrhea')"></td>
+          <td><input type="number" oninput="calculate('Diarrhea')"></td>
+          <td><input type="number" oninput="calculate('Diarrhea')"></td>
+          <td class="total" id="Diarrhea_maleTotal">0</td>
+        </tr>
+        <tr id="Diarrhea_female"><td>إناث</td>
+          <td><input type="number" oninput="calculate('Diarrhea')"></td>
+          <td><input type="number" oninput="calculate('Diarrhea')"></td>
+          <td><input type="number" oninput="calculate('Diarrhea')"></td>
+          <td><input type="number" oninput="calculate('Diarrhea')"></td>
+          <td><input type="number" oninput="calculate('Diarrhea')"></td>
+          <td class="total" id="Diarrhea_femaleTotal">0</td>
+        </tr>
+        <tr class="total"><td>الإجمالي الكلي</td>
+          <td id="Diarrhea_t1">0</td>
+          <td id="Diarrhea_t2">0</td>
+          <td id="Diarrhea_t3">0</td>
+          <td id="Diarrhea_t4">0</td>
+          <td id="Diarrhea_t5">0</td>
+          <td id="Diarrhea_grandTotal">0</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="groupTotal">
+      <strong>إجمالي المجموعة: <span id="G1_total">0</span></strong>
+    </div>
+  </div>
+<!-- ===================== G2 ===================== -->
+<div id="G2" class="tabcontent">
+  <h3>🫁 أمراض الدرن والبكتيريا</h3>
+
+  <div class="subtab">
+    <button class="subtablinks active" onclick="openSubTab(event,'Tuberculosis')">الدرن (السل)</button>
+    <button class="subtablinks" onclick="openSubTab(event,'PulmonaryTB')">السل التنفسي المؤكد</button>
+    <button class="subtablinks" onclick="openSubTab(event,'ExtraPulmonaryTB')">تدرن بالأعضاء الأخرى</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Brucellosis')">داء البروسيلات</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Leprosy')">الجذام</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Tetanus')">كزاز حديثي الولادة</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Diphtheria')">الخناق - الدفتيريا</button>
+  </div>
+
+  <!-- ===== الدرن (السل) ===== -->
+  <div id="Tuberculosis" class="subtabcontent" style="display:block;">
+    <h4>🦠 الدرن (السل)</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Tuberculosis_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Tuberculosis')"></td>
+        <td><input type="number" oninput="calculate('Tuberculosis')"></td>
+        <td><input type="number" oninput="calculate('Tuberculosis')"></td>
+        <td><input type="number" oninput="calculate('Tuberculosis')"></td>
+        <td><input type="number" oninput="calculate('Tuberculosis')"></td>
+        <td class="total" id="Tuberculosis_maleTotal">0</td>
+      </tr>
+      <tr id="Tuberculosis_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Tuberculosis')"></td>
+        <td><input type="number" oninput="calculate('Tuberculosis')"></td>
+        <td><input type="number" oninput="calculate('Tuberculosis')"></td>
+        <td><input type="number" oninput="calculate('Tuberculosis')"></td>
+        <td><input type="number" oninput="calculate('Tuberculosis')"></td>
+        <td class="total" id="Tuberculosis_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Tuberculosis_t1">0</td>
+        <td id="Tuberculosis_t2">0</td>
+        <td id="Tuberculosis_t3">0</td>
+        <td id="Tuberculosis_t4">0</td>
+        <td id="Tuberculosis_t5">0</td>
+        <td id="Tuberculosis_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== السل التنفسي المؤكد ===== -->
+  <div id="PulmonaryTB" class="subtabcontent">
+    <h4>🫁 السل التنفسي المؤكد بالفحص</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="PulmonaryTB_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('PulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('PulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('PulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('PulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('PulmonaryTB')"></td>
+        <td class="total" id="PulmonaryTB_maleTotal">0</td>
+      </tr>
+      <tr id="PulmonaryTB_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('PulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('PulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('PulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('PulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('PulmonaryTB')"></td>
+        <td class="total" id="PulmonaryTB_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="PulmonaryTB_t1">0</td>
+        <td id="PulmonaryTB_t2">0</td>
+        <td id="PulmonaryTB_t3">0</td>
+        <td id="PulmonaryTB_t4">0</td>
+        <td id="PulmonaryTB_t5">0</td>
+        <td id="PulmonaryTB_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+<!-- ===== تدرن بالأعضاء الأخرى ===== -->
+  <div id="ExtraPulmonaryTB" class="subtabcontent">
+    <h4>🫁 تدرن بالأعضاء الأخرى للجسم</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="ExtraPulmonaryTB_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('ExtraPulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('ExtraPulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('ExtraPulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('ExtraPulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('ExtraPulmonaryTB')"></td>
+        <td class="total" id="ExtraPulmonaryTB_maleTotal">0</td>
+      </tr>
+      <tr id="ExtraPulmonaryTB_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('ExtraPulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('ExtraPulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('ExtraPulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('ExtraPulmonaryTB')"></td>
+        <td><input type="number" oninput="calculate('ExtraPulmonaryTB')"></td>
+        <td class="total" id="ExtraPulmonaryTB_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="ExtraPulmonaryTB_t1">0</td>
+        <td id="ExtraPulmonaryTB_t2">0</td>
+        <td id="ExtraPulmonaryTB_t3">0</td>
+        <td id="ExtraPulmonaryTB_t4">0</td>
+        <td id="ExtraPulmonaryTB_t5">0</td>
+        <td id="ExtraPulmonaryTB_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== داء البروسيلات ===== -->
+  <div id="Brucellosis" class="subtabcontent">
+    <h4>🦠 داء البروسيلات</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Brucellosis_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Brucellosis')"></td>
+        <td><input type="number" oninput="calculate('Brucellosis')"></td>
+        <td><input type="number" oninput="calculate('Brucellosis')"></td>
+        <td><input type="number" oninput="calculate('Brucellosis')"></td>
+        <td><input type="number" oninput="calculate('Brucellosis')"></td>
+        <td class="total" id="Brucellosis_maleTotal">0</td>
+      </tr>
+      <tr id="Brucellosis_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Brucellosis')"></td>
+        <td><input type="number" oninput="calculate('Brucellosis')"></td>
+        <td><input type="number" oninput="calculate('Brucellosis')"></td>
+        <td><input type="number" oninput="calculate('Brucellosis')"></td>
+        <td><input type="number" oninput="calculate('Brucellosis')"></td>
+        <td class="total" id="Brucellosis_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Brucellosis_t1">0</td>
+        <td id="Brucellosis_t2">0</td>
+        <td id="Brucellosis_t3">0</td>
+        <td id="Brucellosis_t4">0</td>
+        <td id="Brucellosis_t5">0</td>
+        <td id="Brucellosis_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الجذام ===== -->
+  <div id="Leprosy" class="subtabcontent">
+    <h4>🦠 الجذام</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Leprosy_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Leprosy')"></td>
+        <td><input type="number" oninput="calculate('Leprosy')"></td>
+        <td><input type="number" oninput="calculate('Leprosy')"></td>
+        <td><input type="number" oninput="calculate('Leprosy')"></td>
+        <td><input type="number" oninput="calculate('Leprosy')"></td>
+        <td class="total" id="Leprosy_maleTotal">0</td>
+      </tr>
+      <tr id="Leprosy_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Leprosy')"></td>
+        <td><input type="number" oninput="calculate('Leprosy')"></td>
+        <td><input type="number" oninput="calculate('Leprosy')"></td>
+        <td><input type="number" oninput="calculate('Leprosy')"></td>
+        <td><input type="number" oninput="calculate('Leprosy')"></td>
+        <td class="total" id="Leprosy_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Leprosy_t1">0</td>
+        <td id="Leprosy_t2">0</td>
+        <td id="Leprosy_t3">0</td>
+        <td id="Leprosy_t4">0</td>
+        <td id="Leprosy_t5">0</td>
+        <td id="Leprosy_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== كزاز حديثي الولادة ===== -->
+  <div id="Tetanus" class="subtabcontent">
+    <h4>💉 كزاز حديثي الولادة</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Tetanus_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Tetanus')"></td>
+        <td><input type="number" oninput="calculate('Tetanus')"></td>
+        <td><input type="number" oninput="calculate('Tetanus')"></td>
+        <td><input type="number" oninput="calculate('Tetanus')"></td>
+        <td><input type="number" oninput="calculate('Tetanus')"></td>
+        <td class="total" id="Tetanus_maleTotal">0</td>
+      </tr>
+      <tr id="Tetanus_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Tetanus')"></td>
+        <td><input type="number" oninput="calculate('Tetanus')"></td>
+        <td><input type="number" oninput="calculate('Tetanus')"></td>
+        <td><input type="number" oninput="calculate('Tetanus')"></td>
+        <td><input type="number" oninput="calculate('Tetanus')"></td>
+        <td class="total" id="Tetanus_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Tetanus_t1">0</td>
+        <td id="Tetanus_t2">0</td>
+        <td id="Tetanus_t3">0</td>
+        <td id="Tetanus_t4">0</td>
+        <td id="Tetanus_t5">0</td>
+        <td id="Tetanus_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الخناق - الدفتيريا ===== -->
+  <div id="Diphtheria" class="subtabcontent">
+    <h4>👃 الخناق - الدفتيريا</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Diphtheria_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Diphtheria')"></td>
+        <td><input type="number" oninput="calculate('Diphtheria')"></td>
+        <td><input type="number" oninput="calculate('Diphtheria')"></td>
+        <td><input type="number" oninput="calculate('Diphtheria')"></td>
+        <td><input type="number" oninput="calculate('Diphtheria')"></td>
+        <td class="total" id="Diphtheria_maleTotal">0</td>
+      </tr>
+      <tr id="Diphtheria_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Diphtheria')"></td>
+        <td><input type="number" oninput="calculate('Diphtheria')"></td>
+        <td><input type="number" oninput="calculate('Diphtheria')"></td>
+        <td><input type="number" oninput="calculate('Diphtheria')"></td>
+        <td><input type="number" oninput="calculate('Diphtheria')"></td>
+        <td class="total" id="Diphtheria_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Diphtheria_t1">0</td>
+        <td id="Diphtheria_t2">0</td>
+        <td id="Diphtheria_t3">0</td>
+        <td id="Diphtheria_t4">0</td>
+        <td id="Diphtheria_t5">0</td>
+        <td id="Diphtheria_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+<!-- ===================== G3 ===================== -->
+<div id="G3" class="tabcontent">
+  <h3>🧬 الأمراض المعدية الشائعة</h3>
+
+  <div class="subtab">
+    <button class="subtablinks active" onclick="openSubTab(event,'Pertussis')">🤧 الشاهوق - السعال الديكي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Polio')">💉 شلل الأطفال الحاد</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Rabies')">🐶 داء الكلب - السعار</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Dengue')">🦟 حمى الضنك</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Pseudovirus')">🩹 الجدري الكاذب - الحماق</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Measles')">🤒 الحصبة</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Rubella')">🤰 الحصبة الألمانية</button>
+    <button class="subtablinks" onclick="openSubTab(event,'HepA')">🧪 التهاب الكبد أ الحاد</button>
+    <button class="subtablinks" onclick="openSubTab(event,'HepB')">🧪 التهاب الكبد ب</button>
+    <button class="subtablinks" onclick="openSubTab(event,'OtherHep')">🧪 أنواع أخرى من التهاب الكبد الفيروسي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Mumps')">🤕 النكاف</button>
+  </div>
+
+  <!-- ===== الشاهوق ===== -->
+  <div id="Pertussis" class="subtabcontent" style="display:block;">
+    <h4>🤧 الشاهوق - السعال الديكي</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Pertussis_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Pertussis')"></td>
+        <td><input type="number" oninput="calculate('Pertussis')"></td>
+        <td><input type="number" oninput="calculate('Pertussis')"></td>
+        <td><input type="number" oninput="calculate('Pertussis')"></td>
+        <td><input type="number" oninput="calculate('Pertussis')"></td>
+        <td class="total" id="Pertussis_maleTotal">0</td>
+      </tr>
+      <tr id="Pertussis_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Pertussis')"></td>
+        <td><input type="number" oninput="calculate('Pertussis')"></td>
+        <td><input type="number" oninput="calculate('Pertussis')"></td>
+        <td><input type="number" oninput="calculate('Pertussis')"></td>
+        <td><input type="number" oninput="calculate('Pertussis')"></td>
+        <td class="total" id="Pertussis_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Pertussis_t1">0</td>
+        <td id="Pertussis_t2">0</td>
+        <td id="Pertussis_t3">0</td>
+        <td id="Pertussis_t4">0</td>
+        <td id="Pertussis_t5">0</td>
+        <td id="Pertussis_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== شلل الأطفال الحاد ===== -->
+  <div id="Polio" class="subtabcontent">
+    <h4>💉 شلل الأطفال الحاد</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Polio_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Polio')"></td>
+        <td><input type="number" oninput="calculate('Polio')"></td>
+        <td><input type="number" oninput="calculate('Polio')"></td>
+        <td><input type="number" oninput="calculate('Polio')"></td>
+        <td><input type="number" oninput="calculate('Polio')"></td>
+        <td class="total" id="Polio_maleTotal">0</td>
+      </tr>
+      <tr id="Polio_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Polio')"></td>
+        <td><input type="number" oninput="calculate('Polio')"></td>
+        <td><input type="number" oninput="calculate('Polio')"></td>
+        <td><input type="number" oninput="calculate('Polio')"></td>
+        <td><input type="number" oninput="calculate('Polio')"></td>
+        <td class="total" id="Polio_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Polio_t1">0</td>
+        <td id="Polio_t2">0</td>
+        <td id="Polio_t3">0</td>
+        <td id="Polio_t4">0</td>
+        <td id="Polio_t5">0</td>
+        <td id="Polio_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== داء الكلب ===== -->
+  <div id="Rabies" class="subtabcontent">
+    <h4>🐶 داء الكلب - السعار</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Rabies_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Rabies')"></td>
+        <td><input type="number" oninput="calculate('Rabies')"></td>
+        <td><input type="number" oninput="calculate('Rabies')"></td>
+        <td><input type="number" oninput="calculate('Rabies')"></td>
+        <td><input type="number" oninput="calculate('Rabies')"></td>
+        <td class="total" id="Rabies_maleTotal">0</td>
+      </tr>
+      <tr id="Rabies_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Rabies')"></td>
+        <td><input type="number" oninput="calculate('Rabies')"></td>
+        <td><input type="number" oninput="calculate('Rabies')"></td>
+        <td><input type="number" oninput="calculate('Rabies')"></td>
+        <td><input type="number" oninput="calculate('Rabies')"></td>
+        <td class="total" id="Rabies_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Rabies_t1">0</td>
+        <td id="Rabies_t2">0</td>
+        <td id="Rabies_t3">0</td>
+        <td id="Rabies_t4">0</td>
+        <td id="Rabies_t5">0</td>
+        <td id="Rabies_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== حمى الضنك ===== -->
+  <div id="Dengue" class="subtabcontent">
+    <h4>🦟 حمى الضنك</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Dengue_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Dengue')"></td>
+        <td><input type="number" oninput="calculate('Dengue')"></td>
+        <td><input type="number" oninput="calculate('Dengue')"></td>
+        <td><input type="number" oninput="calculate('Dengue')"></td>
+        <td><input type="number" oninput="calculate('Dengue')"></td>
+        <td class="total" id="Dengue_maleTotal">0</td>
+      </tr>
+      <tr id="Dengue_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Dengue')"></td>
+        <td><input type="number" oninput="calculate('Dengue')"></td>
+        <td><input type="number" oninput="calculate('Dengue')"></td>
+        <td><input type="number" oninput="calculate('Dengue')"></td>
+        <td><input type="number" oninput="calculate('Dengue')"></td>
+        <td class="total" id="Dengue_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Dengue_t1">0</td>
+        <td id="Dengue_t2">0</td>
+        <td id="Dengue_t3">0</td>
+        <td id="Dengue_t4">0</td>
+        <td id="Dengue_t5">0</td>
+        <td id="Dengue_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+    <h4>🩹 الجدري الكاذب - الحماق</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Pseudovirus_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Pseudovirus')"></td>
+        <td><input type="number" oninput="calculate('Pseudovirus')"></td>
+        <td><input type="number" oninput="calculate('Pseudovirus')"></td>
+        <td><input type="number" oninput="calculate('Pseudovirus')"></td>
+        <td><input type="number" oninput="calculate('Pseudovirus')"></td>
+        <td id="Pseudovirus_maleTotal">0</td>
+      </tr>
+      <tr id="Pseudovirus_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Pseudovirus')"></td>
+        <td><input type="number" oninput="calculate('Pseudovirus')"></td>
+        <td><input type="number" oninput="calculate('Pseudovirus')"></td>
+        <td><input type="number" oninput="calculate('Pseudovirus')"></td>
+        <td><input type="number" oninput="calculate('Pseudovirus')"></td>
+        <td id="Pseudovirus_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Pseudovirus_t1">0</td>
+        <td id="Pseudovirus_t2">0</td>
+        <td id="Pseudovirus_t3">0</td>
+        <td id="Pseudovirus_t4">0</td>
+        <td id="Pseudovirus_t5">0</td>
+        <td id="Pseudovirus_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الحصبة ===== -->
+  <div id="Measles" class="subtabcontent">
+    <h4>🤒 الحصبة</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Measles_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Measles')"></td>
+        <td><input type="number" oninput="calculate('Measles')"></td>
+        <td><input type="number" oninput="calculate('Measles')"></td>
+        <td><input type="number" oninput="calculate('Measles')"></td>
+        <td><input type="number" oninput="calculate('Measles')"></td>
+        <td id="Measles_maleTotal">0</td>
+      </tr>
+      <tr id="Measles_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Measles')"></td>
+        <td><input type="number" oninput="calculate('Measles')"></td>
+        <td><input type="number" oninput="calculate('Measles')"></td>
+        <td><input type="number" oninput="calculate('Measles')"></td>
+        <td><input type="number" oninput="calculate('Measles')"></td>
+        <td id="Measles_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Measles_t1">0</td>
+        <td id="Measles_t2">0</td>
+        <td id="Measles_t3">0</td>
+        <td id="Measles_t4">0</td>
+        <td id="Measles_t5">0</td>
+        <td id="Measles_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الحصبة الألمانية ===== -->
+  <div id="Rubella" class="subtabcontent">
+    <h4>🤧 الحصبة الألمانية</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Rubella_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Rubella')"></td>
+        <td><input type="number" oninput="calculate('Rubella')"></td>
+        <td><input type="number" oninput="calculate('Rubella')"></td>
+        <td><input type="number" oninput="calculate('Rubella')"></td>
+        <td><input type="number" oninput="calculate('Rubella')"></td>
+        <td id="Rubella_maleTotal">0</td>
+      </tr>
+      <tr id="Rubella_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Rubella')"></td>
+        <td><input type="number" oninput="calculate('Rubella')"></td>
+        <td><input type="number" oninput="calculate('Rubella')"></td>
+        <td><input type="number" oninput="calculate('Rubella')"></td>
+        <td><input type="number" oninput="calculate('Rubella')"></td>
+        <td id="Rubella_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Rubella_t1">0</td>
+        <td id="Rubella_t2">0</td>
+        <td id="Rubella_t3">0</td>
+        <td id="Rubella_t4">0</td>
+        <td id="Rubella_t5">0</td>
+        <td id="Rubella_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+<!-- ===== التهاب الكبد أ الحاد ===== -->
+<div id="HepA" class="subtabcontent">
+  <h4>🧬 التهاب الكبد أ الحاد</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+    </tr>
+    <tr id="HepA_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('HepA')"></td>
+      <td><input type="number" oninput="calculate('HepA')"></td>
+      <td><input type="number" oninput="calculate('HepA')"></td>
+      <td><input type="number" oninput="calculate('HepA')"></td>
+      <td><input type="number" oninput="calculate('HepA')"></td>
+      <td class="total" id="HepA_maleTotal">0</td>
+    </tr>
+    <tr id="HepA_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('HepA')"></td>
+      <td><input type="number" oninput="calculate('HepA')"></td>
+      <td><input type="number" oninput="calculate('HepA')"></td>
+      <td><input type="number" oninput="calculate('HepA')"></td>
+      <td><input type="number" oninput="calculate('HepA')"></td>
+      <td class="total" id="HepA_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="HepA_t1">0</td>
+      <td id="HepA_t2">0</td>
+      <td id="HepA_t3">0</td>
+      <td id="HepA_t4">0</td>
+      <td id="HepA_t5">0</td>
+      <td id="HepA_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<!-- ===== التهاب الكبد البائي ===== -->
+<div id="HepB" class="subtabcontent">
+  <h4>🧬 التهاب الكبد البائي</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+    </tr>
+    <tr id="HepB_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('HepB')"></td>
+      <td><input type="number" oninput="calculate('HepB')"></td>
+      <td><input type="number" oninput="calculate('HepB')"></td>
+      <td><input type="number" oninput="calculate('HepB')"></td>
+      <td><input type="number" oninput="calculate('HepB')"></td>
+      <td class="total" id="HepB_maleTotal">0</td>
+    </tr>
+    <tr id="HepB_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('HepB')"></td>
+      <td><input type="number" oninput="calculate('HepB')"></td>
+      <td><input type="number" oninput="calculate('HepB')"></td>
+      <td><input type="number" oninput="calculate('HepB')"></td>
+      <td><input type="number" oninput="calculate('HepB')"></td>
+      <td class="total" id="HepB_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="HepB_t1">0</td>
+      <td id="HepB_t2">0</td>
+      <td id="HepB_t3">0</td>
+      <td id="HepB_t4">0</td>
+      <td id="HepB_t5">0</td>
+      <td id="HepB_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<!-- ===== أنواع أخرى من التهاب الكبد الفيروسي ===== -->
+<div id="OtherHep" class="subtabcontent">
+  <h4>🧬 أنواع أخرى من التهاب الكبد الفيروسي</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+    </tr>
+    <tr id="OtherHep_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('OtherHep')"></td>
+      <td><input type="number" oninput="calculate('OtherHep')"></td>
+      <td><input type="number" oninput="calculate('OtherHep')"></td>
+      <td><input type="number" oninput="calculate('OtherHep')"></td>
+      <td><input type="number" oninput="calculate('OtherHep')"></td>
+      <td class="total" id="OtherHep_maleTotal">0</td>
+    </tr>
+    <tr id="OtherHep_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('OtherHep')"></td>
+      <td><input type="number" oninput="calculate('OtherHep')"></td>
+      <td><input type="number" oninput="calculate('OtherHep')"></td>
+      <td><input type="number" oninput="calculate('OtherHep')"></td>
+      <td><input type="number" oninput="calculate('OtherHep')"></td>
+      <td class="total" id="OtherHep_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="OtherHep_t1">0</td>
+      <td id="OtherHep_t2">0</td>
+      <td id="OtherHep_t3">0</td>
+      <td id="OtherHep_t4">0</td>
+      <td id="OtherHep_t5">0</td>
+      <td id="OtherHep_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<!-- ===== النكاف ===== -->
+<div id="Mumps" class="subtabcontent">
+  <h4>🤒 النكاف</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+    </tr>
+    <tr id="Mumps_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('Mumps')"></td>
+      <td><input type="number" oninput="calculate('Mumps')"></td>
+      <td><input type="number" oninput="calculate('Mumps')"></td>
+      <td><input type="number" oninput="calculate('Mumps')"></td>
+      <td><input type="number" oninput="calculate('Mumps')"></td>
+      <td class="total" id="Mumps_maleTotal">0</td>
+    </tr>
+    <tr id="Mumps_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('Mumps')"></td>
+      <td><input type="number" oninput="calculate('Mumps')"></td>
+      <td><input type="number" oninput="calculate('Mumps')"></td>
+      <td><input type="number" oninput="calculate('Mumps')"></td>
+      <td><input type="number" oninput="calculate('Mumps')"></td>
+      <td class="total" id="Mumps_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="Mumps_t1">0</td>
+      <td id="Mumps_t2">0</td>
+      <td id="Mumps_t3">0</td>
+      <td id="Mumps_t4">0</td>
+      <td id="Mumps_t5">0</td>
+      <td id="Mumps_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+  <!-- ===== استكمال باقي الأمراض بنفس النمط: Pseudovirus, Measles, Rubella, HepA, HepB, OtherHep, Mumps ===== -->
+
+  <!-- ===== إجمالي المجموعة G3 ===== -->
+  <div style="text-align:left; font-weight:bold; font-size:18px; color:#004085; margin-top:15px;">
+    إجمالي المجموعة: <span id="G3_total">0</span>
+  </div>
+</div>
+<h3>🟣 المجموعة الرابعة: الأمراض الطفيلية والفطرية</h3>
+
+<div class="subtabs">
+  <button class="subtablinks" onclick="openSubTab(event,'Fungal')">🍄 الأمراض الفطرية</button>
+  <button class="subtablinks" onclick="openSubTab(event,'Malaria')">🦟 الملاريا</button>
+  <button class="subtablinks" onclick="openSubTab(event,'Leishmaniasis')">🧫 الليشمانيات</button>
+  <button class="subtablinks" onclick="openSubTab(event,'Schistosomiasis')">💧 البلهارسيا</button>
+  <button class="subtablinks" onclick="openSubTab(event,'GuineaWorm')">🪱 دودة غينيا</button>
+  <button class="subtablinks" onclick="openSubTab(event,'IntestinalParasites')">🦠 التطفل المعوي</button>
+</div>
+<div id="Fungal" class="subtabcontent">
+  <h4>🍄 الأمراض الفطرية</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="Fungal_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('Fungal')"></td>
+      <td><input type="number" oninput="calculate('Fungal')"></td>
+      <td><input type="number" oninput="calculate('Fungal')"></td>
+      <td><input type="number" oninput="calculate('Fungal')"></td>
+      <td><input type="number" oninput="calculate('Fungal')"></td>
+      <td id="Fungal_maleTotal">0</td>
+    </tr>
+
+    <tr id="Fungal_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('Fungal')"></td>
+      <td><input type="number" oninput="calculate('Fungal')"></td>
+      <td><input type="number" oninput="calculate('Fungal')"></td>
+      <td><input type="number" oninput="calculate('Fungal')"></td>
+      <td><input type="number" oninput="calculate('Fungal')"></td>
+      <td id="Fungal_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="Fungal_t1">0</td>
+      <td id="Fungal_t2">0</td>
+      <td id="Fungal_t3">0</td>
+      <td id="Fungal_t4">0</td>
+      <td id="Fungal_t5">0</td>
+      <td id="Fungal_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="Malaria" class="subtabcontent">
+  <h4>🦟 الملاريا</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="Malaria_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('Malaria')"></td>
+      <td><input type="number" oninput="calculate('Malaria')"></td>
+      <td><input type="number" oninput="calculate('Malaria')"></td>
+      <td><input type="number" oninput="calculate('Malaria')"></td>
+      <td><input type="number" oninput="calculate('Malaria')"></td>
+      <td id="Malaria_maleTotal">0</td>
+    </tr>
+
+    <tr id="Malaria_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('Malaria')"></td>
+      <td><input type="number" oninput="calculate('Malaria')"></td>
+      <td><input type="number" oninput="calculate('Malaria')"></td>
+      <td><input type="number" oninput="calculate('Malaria')"></td>
+      <td><input type="number" oninput="calculate('Malaria')"></td>
+      <td id="Malaria_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="Malaria_t1">0</td>
+      <td id="Malaria_t2">0</td>
+      <td id="Malaria_t3">0</td>
+      <td id="Malaria_t4">0</td>
+      <td id="Malaria_t5">0</td>
+      <td id="Malaria_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+
+<div id="Leishmaniasis" class="subtabcontent">
+  <h4>🧫 داء الليشمانيات (الكلازار / الداء الأسود)</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="Leishmaniasis_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('Leishmaniasis')"></td>
+      <td><input type="number" oninput="calculate('Leishmaniasis')"></td>
+      <td><input type="number" oninput="calculate('Leishmaniasis')"></td>
+      <td><input type="number" oninput="calculate('Leishmaniasis')"></td>
+      <td><input type="number" oninput="calculate('Leishmaniasis')"></td>
+      <td id="Leishmaniasis_maleTotal">0</td>
+    </tr>
+
+    <tr id="Leishmaniasis_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('Leishmaniasis')"></td>
+      <td><input type="number" oninput="calculate('Leishmaniasis')"></td>
+      <td><input type="number" oninput="calculate('Leishmaniasis')"></td>
+      <td><input type="number" oninput="calculate('Leishmaniasis')"></td>
+      <td><input type="number" oninput="calculate('Leishmaniasis')"></td>
+      <td id="Leishmaniasis_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="Leishmaniasis_t1">0</td>
+      <td id="Leishmaniasis_t2">0</td>
+      <td id="Leishmaniasis_t3">0</td>
+      <td id="Leishmaniasis_t4">0</td>
+      <td id="Leishmaniasis_t5">0</td>
+      <td id="Leishmaniasis_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="Schistosomiasis" class="subtabcontent">
+  <h4>💧 داء البلهارسيا</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="Schistosomiasis_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('Schistosomiasis')"></td>
+      <td><input type="number" oninput="calculate('Schistosomiasis')"></td>
+      <td><input type="number" oninput="calculate('Schistosomiasis')"></td>
+      <td><input type="number" oninput="calculate('Schistosomiasis')"></td>
+      <td><input type="number" oninput="calculate('Schistosomiasis')"></td>
+      <td id="Schistosomiasis_maleTotal">0</td>
+    </tr>
+
+    <tr id="Schistosomiasis_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('Schistosomiasis')"></td>
+      <td><input type="number" oninput="calculate('Schistosomiasis')"></td>
+      <td><input type="number" oninput="calculate('Schistosomiasis')"></td>
+      <td><input type="number" oninput="calculate('Schistosomiasis')"></td>
+      <td><input type="number" oninput="calculate('Schistosomiasis')"></td>
+      <td id="Schistosomiasis_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="Schistosomiasis_t1">0</td>
+      <td id="Schistosomiasis_t2">0</td>
+      <td id="Schistosomiasis_t3">0</td>
+      <td id="Schistosomiasis_t4">0</td>
+      <td id="Schistosomiasis_t5">0</td>
+      <td id="Schistosomiasis_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="GuineaWorm" class="subtabcontent">
+  <h4>🪱 دودة غينيا</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="GuineaWorm_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('GuineaWorm')"></td>
+      <td><input type="number" oninput="calculate('GuineaWorm')"></td>
+      <td><input type="number" oninput="calculate('GuineaWorm')"></td>
+      <td><input type="number" oninput="calculate('GuineaWorm')"></td>
+      <td><input type="number" oninput="calculate('GuineaWorm')"></td>
+      <td id="GuineaWorm_maleTotal">0</td>
+    </tr>
+
+    <tr id="GuineaWorm_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('GuineaWorm')"></td>
+      <td><input type="number" oninput="calculate('GuineaWorm')"></td>
+      <td><input type="number" oninput="calculate('GuineaWorm')"></td>
+      <td><input type="number" oninput="calculate('GuineaWorm')"></td>
+      <td><input type="number" oninput="calculate('GuineaWorm')"></td>
+      <td id="GuineaWorm_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="GuineaWorm_t1">0</td>
+      <td id="GuineaWorm_t2">0</td>
+      <td id="GuineaWorm_t3">0</td>
+      <td id="GuineaWorm_t4">0</td>
+      <td id="GuineaWorm_t5">0</td>
+      <td id="GuineaWorm_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="IntestinalParasites" class="subtabcontent">
+  <h4>🦠 أمراض الأمعاء الطفيلية (التطفل المعوي)</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="IntestinalParasites_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('IntestinalParasites')"></td>
+      <td><input type="number" oninput="calculate('IntestinalParasites')"></td>
+      <td><input type="number" oninput="calculate('IntestinalParasites')"></td>
+      <td><input type="number" oninput="calculate('IntestinalParasites')"></td>
+      <td><input type="number" oninput="calculate('IntestinalParasites')"></td>
+      <td id="IntestinalParasites_maleTotal">0</td>
+    </tr>
+
+    <tr id="IntestinalParasites_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('IntestinalParasites')"></td>
+      <td><input type="number" oninput="calculate('IntestinalParasites')"></td>
+      <td><input type="number" oninput="calculate('IntestinalParasites')"></td>
+      <td><input type="number" oninput="calculate('IntestinalParasites')"></td>
+      <td><input type="number" oninput="calculate('IntestinalParasites')"></td>
+      <td id="IntestinalParasites_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="IntestinalParasites_t1">0</td>
+      <td id="IntestinalParasites_t2">0</td>
+      <td id="IntestinalParasites_t3">0</td>
+      <td id="IntestinalParasites_t4">0</td>
+      <td id="IntestinalParasites_t5">0</td>
+      <td id="IntestinalParasites_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<!-- ===================== G5 ===================== -->
+<div id="G5" class="tabcontent">
+  <h3>🧬 الأورام</h3>
+
+  <!-- تبويبات الفرعية -->
+  <div class="subtab">
+    <button class="subtablinks active" onclick="openSubTab(event,'MalignantTumors')">الأورام الخبيثة</button>
+    <button class="subtablinks" onclick="openSubTab(event,'RespiratoryCancer')">الجهاز التنفسي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'DigestiveCancer')">الجهاز الهضمي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'BreastCancer')">الثدي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'BenignTumors')">الأورام الحميدة</button>
+  </div>
+
+  <!-- ===== الأورام الخبيثة ===== -->
+  <div id="MalignantTumors" class="subtabcontent" style="display:block;">
+    <h4>🦠 الأورام الخبيثة</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="MalignantTumors_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('MalignantTumors')"></td>
+        <td><input type="number" oninput="calculate('MalignantTumors')"></td>
+        <td><input type="number" oninput="calculate('MalignantTumors')"></td>
+        <td><input type="number" oninput="calculate('MalignantTumors')"></td>
+        <td><input type="number" oninput="calculate('MalignantTumors')"></td>
+        <td id="MalignantTumors_maleTotal">0</td>
+      </tr>
+      <tr id="MalignantTumors_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('MalignantTumors')"></td>
+        <td><input type="number" oninput="calculate('MalignantTumors')"></td>
+        <td><input type="number" oninput="calculate('MalignantTumors')"></td>
+        <td><input type="number" oninput="calculate('MalignantTumors')"></td>
+        <td><input type="number" oninput="calculate('MalignantTumors')"></td>
+        <td id="MalignantTumors_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="MalignantTumors_t1">0</td>
+        <td id="MalignantTumors_t2">0</td>
+        <td id="MalignantTumors_t3">0</td>
+        <td id="MalignantTumors_t4">0</td>
+        <td id="MalignantTumors_t5">0</td>
+        <td id="MalignantTumors_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الأورام الخبيثة بالجهاز التنفسي ===== -->
+  <div id="RespiratoryCancer" class="subtabcontent">
+    <h4>🫁 الأورام الخبيثة بالجهاز التنفسي</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="RespiratoryCancer_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('RespiratoryCancer')"></td>
+        <td><input type="number" oninput="calculate('RespiratoryCancer')"></td>
+        <td><input type="number" oninput="calculate('RespiratoryCancer')"></td>
+        <td><input type="number" oninput="calculate('RespiratoryCancer')"></td>
+        <td><input type="number" oninput="calculate('RespiratoryCancer')"></td>
+        <td id="RespiratoryCancer_maleTotal">0</td>
+      </tr>
+      <tr id="RespiratoryCancer_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('RespiratoryCancer')"></td>
+        <td><input type="number" oninput="calculate('RespiratoryCancer')"></td>
+        <td><input type="number" oninput="calculate('RespiratoryCancer')"></td>
+        <td><input type="number" oninput="calculate('RespiratoryCancer')"></td>
+        <td><input type="number" oninput="calculate('RespiratoryCancer')"></td>
+        <td id="RespiratoryCancer_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="RespiratoryCancer_t1">0</td>
+        <td id="RespiratoryCancer_t2">0</td>
+        <td id="RespiratoryCancer_t3">0</td>
+        <td id="RespiratoryCancer_t4">0</td>
+        <td id="RespiratoryCancer_t5">0</td>
+        <td id="RespiratoryCancer_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الأورام الخبيثة بالجهاز الهضمي ===== -->
+  <div id="DigestiveCancer" class="subtabcontent">
+    <h4>🥖 الأورام الخبيثة بالجهاز الهضمي</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="DigestiveCancer_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('DigestiveCancer')"></td>
+        <td><input type="number" oninput="calculate('DigestiveCancer')"></td>
+        <td><input type="number" oninput="calculate('DigestiveCancer')"></td>
+        <td><input type="number" oninput="calculate('DigestiveCancer')"></td>
+        <td><input type="number" oninput="calculate('DigestiveCancer')"></td>
+        <td id="DigestiveCancer_maleTotal">0</td>
+      </tr>
+      <tr id="DigestiveCancer_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('DigestiveCancer')"></td>
+        <td><input type="number" oninput="calculate('DigestiveCancer')"></td>
+        <td><input type="number" oninput="calculate('DigestiveCancer')"></td>
+        <td><input type="number" oninput="calculate('DigestiveCancer')"></td>
+        <td><input type="number" oninput="calculate('DigestiveCancer')"></td>
+        <td id="DigestiveCancer_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="DigestiveCancer_t1">0</td>
+        <td id="DigestiveCancer_t2">0</td>
+        <td id="DigestiveCancer_t3">0</td>
+        <td id="DigestiveCancer_t4">0</td>
+        <td id="DigestiveCancer_t5">0</td>
+        <td id="DigestiveCancer_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الأورام الخبيثة بالثدي ===== -->
+  <div id="BreastCancer" class="subtabcontent">
+    <h4>🎀 الأورام الخبيثة بالثدي</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="BreastCancer_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('BreastCancer')"></td>
+        <td><input type="number" oninput="calculate('BreastCancer')"></td>
+        <td><input type="number" oninput="calculate('BreastCancer')"></td>
+        <td><input type="number" oninput="calculate('BreastCancer')"></td>
+        <td><input type="number" oninput="calculate('BreastCancer')"></td>
+        <td id="BreastCancer_maleTotal">0</td>
+      </tr>
+      <tr id="BreastCancer_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('BreastCancer')"></td>
+        <td><input type="number" oninput="calculate('BreastCancer')"></td>
+        <td><input type="number" oninput="calculate('BreastCancer')"></td>
+        <td><input type="number" oninput="calculate('BreastCancer')"></td>
+        <td><input type="number" oninput="calculate('BreastCancer')"></td>
+        <td id="BreastCancer_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="BreastCancer_t1">0</td>
+        <td id="BreastCancer_t2">0</td>
+        <td id="BreastCancer_t3">0</td>
+        <td id="BreastCancer_t4">0</td>
+        <td id="BreastCancer_t5">0</td>
+        <td id="BreastCancer_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الأورام الحميدة ===== -->
+  <div id="BenignTumors" class="subtabcontent">
+    <h4>🟢 الأورام الحميدة</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="BenignTumors_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('BenignTumors')"></td>
+        <td><input type="number" oninput="calculate('BenignTumors')"></td>
+        <td><input type="number" oninput="calculate('BenignTumors')"></td>
+        <td><input type="number" oninput="calculate('BenignTumors')"></td>
+        <td><input type="number" oninput="calculate('BenignTumors')"></td>
+        <td id="BenignTumors_maleTotal">0</td>
+      </tr>
+      <tr id="BenignTumors_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('BenignTumors')"></td>
+        <td><input type="number" oninput="calculate('BenignTumors')"></td>
+        <td><input type="number" oninput="calculate('BenignTumors')"></td>
+        <td><input type="number" oninput="calculate('BenignTumors')"></td>
+        <td><input type="number" oninput="calculate('BenignTumors')"></td>
+        <td id="BenignTumors_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="BenignTumors_t1">0</td>
+        <td id="BenignTumors_t2">0</td>
+        <td id="BenignTumors_t3">0</td>
+        <td id="BenignTumors_t4">0</td>
+        <td id="BenignTumors_t5">0</td>
+        <td id="BenignTumors_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== إجمالي المجموعة ===== -->
+  <div style="text-align:left; font-weight:bold; font-size:18px; color:#004085; margin-top:15px;">
+    إجمالي المجموعة: <span id="G5_total">0</span>
+  </div>
+</div>
+<!-- ===================== المجموعة 6: أمراض الدم والتغذية ===================== -->
+<div id="G6" class="tabcontent">
+  <h3>🩸 أمراض الدم والتغذية</h3>
+
+  <div class="subtab">
+    <button class="subtablinks active" onclick="openSubTab(event,'NutritionalAnemia')">فقر الدم التغذوي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Thalassemia')">الثلاسيميا – أنيميا البحر المتوسط</button>
+    <button class="subtablinks" onclick="openSubTab(event,'SickleCell')">فقر الدم المنجلي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'OtherAnemia')">أنواع أخرى من فقر الدم</button>
+    <button class="subtablinks" onclick="openSubTab(event,'SpleenDiseases')">أمراض الطحال</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Diabetes')">داء السكري</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Malnutrition')">سوء التغذية</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Rickets')">الكساح</button>
+  </div>
+
+  <!-- ===== فقر الدم التغذوي ===== -->
+  <div id="NutritionalAnemia" class="subtabcontent" style="display:block">
+    <h4>🩸 فقر الدم التغذوي</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="NutritionalAnemia_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('NutritionalAnemia')"></td>
+        <td><input type="number" oninput="calculate('NutritionalAnemia')"></td>
+        <td><input type="number" oninput="calculate('NutritionalAnemia')"></td>
+        <td><input type="number" oninput="calculate('NutritionalAnemia')"></td>
+        <td><input type="number" oninput="calculate('NutritionalAnemia')"></td>
+        <td id="NutritionalAnemia_maleTotal">0</td>
+      </tr>
+      <tr id="NutritionalAnemia_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('NutritionalAnemia')"></td>
+        <td><input type="number" oninput="calculate('NutritionalAnemia')"></td>
+        <td><input type="number" oninput="calculate('NutritionalAnemia')"></td>
+        <td><input type="number" oninput="calculate('NutritionalAnemia')"></td>
+        <td><input type="number" oninput="calculate('NutritionalAnemia')"></td>
+        <td id="NutritionalAnemia_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="NutritionalAnemia_t1">0</td>
+        <td id="NutritionalAnemia_t2">0</td>
+        <td id="NutritionalAnemia_t3">0</td>
+        <td id="NutritionalAnemia_t4">0</td>
+        <td id="NutritionalAnemia_t5">0</td>
+        <td id="NutritionalAnemia_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الثلاسيميا – أنيميا البحر المتوسط ===== -->
+  <div id="Thalassemia" class="subtabcontent">
+    <h4>🩸 الثلاسيميا – أنيميا البحر المتوسط</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Thalassemia_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Thalassemia')"></td>
+        <td><input type="number" oninput="calculate('Thalassemia')"></td>
+        <td><input type="number" oninput="calculate('Thalassemia')"></td>
+        <td><input type="number" oninput="calculate('Thalassemia')"></td>
+        <td><input type="number" oninput="calculate('Thalassemia')"></td>
+        <td id="Thalassemia_maleTotal">0</td>
+      </tr>
+      <tr id="Thalassemia_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Thalassemia')"></td>
+        <td><input type="number" oninput="calculate('Thalassemia')"></td>
+        <td><input type="number" oninput="calculate('Thalassemia')"></td>
+        <td><input type="number" oninput="calculate('Thalassemia')"></td>
+        <td><input type="number" oninput="calculate('Thalassemia')"></td>
+        <td id="Thalassemia_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Thalassemia_t1">0</td>
+        <td id="Thalassemia_t2">0</td>
+        <td id="Thalassemia_t3">0</td>
+        <td id="Thalassemia_t4">0</td>
+        <td id="Thalassemia_t5">0</td>
+        <td id="Thalassemia_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== فقر الدم المنجلي ===== -->
+  <div id="SickleCell" class="subtabcontent">
+    <h4>🩸 فقر الدم المنجلي</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="SickleCell_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('SickleCell')"></td>
+        <td><input type="number" oninput="calculate('SickleCell')"></td>
+        <td><input type="number" oninput="calculate('SickleCell')"></td>
+        <td><input type="number" oninput="calculate('SickleCell')"></td>
+        <td><input type="number" oninput="calculate('SickleCell')"></td>
+        <td id="SickleCell_maleTotal">0</td>
+      </tr>
+      <tr id="SickleCell_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('SickleCell')"></td>
+        <td><input type="number" oninput="calculate('SickleCell')"></td>
+        <td><input type="number" oninput="calculate('SickleCell')"></td>
+        <td><input type="number" oninput="calculate('SickleCell')"></td>
+        <td><input type="number" oninput="calculate('SickleCell')"></td>
+        <td id="SickleCell_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="SickleCell_t1">0</td>
+        <td id="SickleCell_t2">0</td>
+        <td id="SickleCell_t3">0</td>
+        <td id="SickleCell_t4">0</td>
+        <td id="SickleCell_t5">0</td>
+        <td id="SickleCell_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== أنواع أخرى من فقر الدم ===== -->
+  <div id="OtherAnemia" class="subtabcontent">
+    <h4>🩸 أنواع أخرى من فقر الدم</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="OtherAnemia_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('OtherAnemia')"></td>
+        <td><input type="number" oninput="calculate('OtherAnemia')"></td>
+        <td><input type="number" oninput="calculate('OtherAnemia')"></td>
+        <td><input type="number" oninput="calculate('OtherAnemia')"></td>
+        <td><input type="number" oninput="calculate('OtherAnemia')"></td>
+        <td id="OtherAnemia_maleTotal">0</td>
+      </tr>
+      <tr id="OtherAnemia_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('OtherAnemia')"></td>
+        <td><input type="number" oninput="calculate('OtherAnemia')"></td>
+        <td><input type="number" oninput="calculate('OtherAnemia')"></td>
+        <td><input type="number" oninput="calculate('OtherAnemia')"></td>
+        <td><input type="number" oninput="calculate('OtherAnemia')"></td>
+        <td id="OtherAnemia_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="OtherAnemia_t1">0</td>
+        <td id="OtherAnemia_t2">0</td>
+        <td id="OtherAnemia_t3">0</td>
+        <td id="OtherAnemia_t4">0</td>
+        <td id="OtherAnemia_t5">0</td>
+        <td id="OtherAnemia_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== أمراض الطحال ===== -->
+  <div id="SpleenDiseases" class="subtabcontent">
+    <h4>🩸 أمراض الطحال</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="SpleenDiseases_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('SpleenDiseases')"></td>
+        <td><input type="number" oninput="calculate('SpleenDiseases')"></td>
+        <td><input type="number" oninput="calculate('SpleenDiseases')"></td>
+        <td><input type="number" oninput="calculate('SpleenDiseases')"></td>
+        <td><input type="number" oninput="calculate('SpleenDiseases')"></td>
+        <td id="SpleenDiseases_maleTotal">0</td>
+      </tr>
+      <tr id="SpleenDiseases_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('SpleenDiseases')"></td>
+        <td><input type="number" oninput="calculate('SpleenDiseases')"></td>
+        <td><input type="number" oninput="calculate('SpleenDiseases')"></td>
+        <td><input type="number" oninput="calculate('SpleenDiseases')"></td>
+        <td><input type="number" oninput="calculate('SpleenDiseases')"></td>
+        <td id="SpleenDiseases_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="SpleenDiseases_t1">0</td>
+        <td id="SpleenDiseases_t2">0</td>
+        <td id="SpleenDiseases_t3">0</td>
+        <td id="SpleenDiseases_t4">0</td>
+        <td id="SpleenDiseases_t5">0</td>
+        <td id="SpleenDiseases_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== داء السكري ===== -->
+  <div id="Diabetes" class="subtabcontent">
+    <h4>🩸 داء السكري</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Diabetes_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Diabetes')"></td>
+        <td><input type="number" oninput="calculate('Diabetes')"></td>
+        <td><input type="number" oninput="calculate('Diabetes')"></td>
+        <td><input type="number" oninput="calculate('Diabetes')"></td>
+        <td><input type="number" oninput="calculate('Diabetes')"></td>
+        <td id="Diabetes_maleTotal">0</td>
+      </tr>
+      <tr id="Diabetes_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Diabetes')"></td>
+        <td><input type="number" oninput="calculate('Diabetes')"></td>
+        <td><input type="number" oninput="calculate('Diabetes')"></td>
+        <td><input type="number" oninput="calculate('Diabetes')"></td>
+        <td><input type="number" oninput="calculate('Diabetes')"></td>
+        <td id="Diabetes_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Diabetes_t1">0</td>
+        <td id="Diabetes_t2">0</td>
+        <td id="Diabetes_t3">0</td>
+        <td id="Diabetes_t4">0</td>
+        <td id="Diabetes_t5">0</td>
+        <td id="Diabetes_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+<!-- ===================== سوء التغذية ===================== -->
+<div id="Malnutrition" class="subtabcontent">
+  <h4>🩸 سوء التغذية</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th>
+      <th>1–4</th>
+      <th>5–14</th>
+      <th>15–45</th>
+      <th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+    <tr id="Malnutrition_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('Malnutrition')"></td>
+      <td><input type="number" oninput="calculate('Malnutrition')"></td>
+      <td><input type="number" oninput="calculate('Malnutrition')"></td>
+      <td><input type="number" oninput="calculate('Malnutrition')"></td>
+      <td><input type="number" oninput="calculate('Malnutrition')"></td>
+      <td id="Malnutrition_maleTotal">0</td>
+    </tr>
+    <tr id="Malnutrition_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('Malnutrition')"></td>
+      <td><input type="number" oninput="calculate('Malnutrition')"></td>
+      <td><input type="number" oninput="calculate('Malnutrition')"></td>
+      <td><input type="number" oninput="calculate('Malnutrition')"></td>
+      <td><input type="number" oninput="calculate('Malnutrition')"></td>
+      <td id="Malnutrition_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="Malnutrition_t1">0</td>
+      <td id="Malnutrition_t2">0</td>
+      <td id="Malnutrition_t3">0</td>
+      <td id="Malnutrition_t4">0</td>
+      <td id="Malnutrition_t5">0</td>
+      <td id="Malnutrition_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<!-- ===================== المجموعة 7: أمراض الجهاز العصبي والعقلي ===================== -->
+<div id="G7" class="tabcontent">
+  <h3>🧠 أمراض الجهاز العصبي والعقلي</h3>
+
+  <div class="subtab">
+    <button class="subtablinks active" onclick="openSubTab(event,'MentalDisorders')">الاضطرابات العقلية والسلوكية</button>
+    <button class="subtablinks" onclick="openSubTab(event,'NeurologicalDiseases')">أمراض الجهاز العصبي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'BacterialMeningitis')">التهاب السحايا (البكتيري)</button>
+    <button class="subtablinks" onclick="openSubTab(event,'UnknownMeningitis')">التهاب السحايا لأسباب غير محددة</button>
+  </div>
+
+  <!-- ===== الاضطرابات العقلية والسلوكية ===== -->
+  <div id="MentalDisorders" class="subtabcontent" style="display:block;">
+    <h4>🧩 الاضطرابات العقلية والسلوكية</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="MentalDisorders_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('MentalDisorders')"></td>
+        <td><input type="number" oninput="calculate('MentalDisorders')"></td>
+        <td><input type="number" oninput="calculate('MentalDisorders')"></td>
+        <td><input type="number" oninput="calculate('MentalDisorders')"></td>
+        <td><input type="number" oninput="calculate('MentalDisorders')"></td>
+        <td id="MentalDisorders_maleTotal">0</td>
+      </tr>
+      <tr id="MentalDisorders_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('MentalDisorders')"></td>
+        <td><input type="number" oninput="calculate('MentalDisorders')"></td>
+        <td><input type="number" oninput="calculate('MentalDisorders')"></td>
+        <td><input type="number" oninput="calculate('MentalDisorders')"></td>
+        <td><input type="number" oninput="calculate('MentalDisorders')"></td>
+        <td id="MentalDisorders_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="MentalDisorders_t1">0</td>
+        <td id="MentalDisorders_t2">0</td>
+        <td id="MentalDisorders_t3">0</td>
+        <td id="MentalDisorders_t4">0</td>
+        <td id="MentalDisorders_t5">0</td>
+        <td id="MentalDisorders_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== أمراض الجهاز العصبي ===== -->
+  <div id="NeurologicalDiseases" class="subtabcontent">
+    <h4>🧠 أمراض الجهاز العصبي</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="NeurologicalDiseases_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('NeurologicalDiseases')"></td>
+        <td><input type="number" oninput="calculate('NeurologicalDiseases')"></td>
+        <td><input type="number" oninput="calculate('NeurologicalDiseases')"></td>
+        <td><input type="number" oninput="calculate('NeurologicalDiseases')"></td>
+        <td><input type="number" oninput="calculate('NeurologicalDiseases')"></td>
+        <td id="NeurologicalDiseases_maleTotal">0</td>
+      </tr>
+      <tr id="NeurologicalDiseases_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('NeurologicalDiseases')"></td>
+        <td><input type="number" oninput="calculate('NeurologicalDiseases')"></td>
+        <td><input type="number" oninput="calculate('NeurologicalDiseases')"></td>
+        <td><input type="number" oninput="calculate('NeurologicalDiseases')"></td>
+        <td><input type="number" oninput="calculate('NeurologicalDiseases')"></td>
+        <td id="NeurologicalDiseases_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="NeurologicalDiseases_t1">0</td>
+        <td id="NeurologicalDiseases_t2">0</td>
+        <td id="NeurologicalDiseases_t3">0</td>
+        <td id="NeurologicalDiseases_t4">0</td>
+        <td id="NeurologicalDiseases_t5">0</td>
+        <td id="NeurologicalDiseases_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== التهاب السحايا (البكتيري) ===== -->
+  <div id="BacterialMeningitis" class="subtabcontent">
+    <h4>🧫 التهاب السحايا (البكتيري)</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="BacterialMeningitis_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('BacterialMeningitis')"></td>
+        <td><input type="number" oninput="calculate('BacterialMeningitis')"></td>
+        <td><input type="number" oninput="calculate('BacterialMeningitis')"></td>
+        <td><input type="number" oninput="calculate('BacterialMeningitis')"></td>
+        <td><input type="number" oninput="calculate('BacterialMeningitis')"></td>
+        <td id="BacterialMeningitis_maleTotal">0</td>
+      </tr>
+      <tr id="BacterialMeningitis_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('BacterialMeningitis')"></td>
+        <td><input type="number" oninput="calculate('BacterialMeningitis')"></td>
+        <td><input type="number" oninput="calculate('BacterialMeningitis')"></td>
+        <td><input type="number" oninput="calculate('BacterialMeningitis')"></td>
+        <td><input type="number" oninput="calculate('BacterialMeningitis')"></td>
+        <td id="BacterialMeningitis_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="BacterialMeningitis_t1">0</td>
+        <td id="BacterialMeningitis_t2">0</td>
+        <td id="BacterialMeningitis_t3">0</td>
+        <td id="BacterialMeningitis_t4">0</td>
+        <td id="BacterialMeningitis_t5">0</td>
+        <td id="BacterialMeningitis_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== التهاب السحايا لأسباب غير محددة ===== -->
+  <div id="UnknownMeningitis" class="subtabcontent">
+    <h4>❓ التهاب السحايا لأسباب غير محددة</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="UnknownMeningitis_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('UnknownMeningitis')"></td>
+        <td><input type="number" oninput="calculate('UnknownMeningitis')"></td>
+        <td><input type="number" oninput="calculate('UnknownMeningitis')"></td>
+        <td><input type="number" oninput="calculate('UnknownMeningitis')"></td>
+        <td><input type="number" oninput="calculate('UnknownMeningitis')"></td>
+        <td id="UnknownMeningitis_maleTotal">0</td>
+      </tr>
+      <tr id="UnknownMeningitis_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('UnknownMeningitis')"></td>
+        <td><input type="number" oninput="calculate('UnknownMeningitis')"></td>
+        <td><input type="number" oninput="calculate('UnknownMeningitis')"></td>
+        <td><input type="number" oninput="calculate('UnknownMeningitis')"></td>
+        <td><input type="number" oninput="calculate('UnknownMeningitis')"></td>
+        <td id="UnknownMeningitis_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="UnknownMeningitis_t1">0</td>
+        <td id="UnknownMeningitis_t2">0</td>
+        <td id="UnknownMeningitis_t3">0</td>
+        <td id="UnknownMeningitis_t4">0</td>
+        <td id="UnknownMeningitis_t5">0</td>
+        <td id="UnknownMeningitis_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== إجمالي المجموعة 7 ===== -->
+  <div style="text-align:left; font-weight:bold; font-size:18px; color:#004085; margin-top:15px;">
+    إجمالي المجموعة: <span id="G7_total">0</span>
+  </div>
+</div>
+<!-- ===================== المجموعة 8: أمراض العين والأذن ===================== -->
+<div id="G8" class="tabcontent">
+  <h3>👁️‍🗨️ أمراض العين والأذن</h3>
+
+  <div class="subtab">
+    <button class="subtablinks active" onclick="openSubTab(event,'EyeDiseases')">أمراض العين وملحقاتها</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Glaucoma')">المياه الزرقاء</button>
+    <button class="subtablinks" onclick="openSubTab(event,'EarMalformations')">الاضطرابات بالأذن والنتوء الخشائي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'ExternalEarDisorders')">اضطرابات الأذن (الخارجية)</button>
+    <button class="subtablinks" onclick="openSubTab(event,'MiddleEarDisorders')">اضطرابات الأذن الوسطى</button>
+  </div>
+
+  <!-- ===== أمراض العين وملحقاتها ===== -->
+  <div id="EyeDiseases" class="subtabcontent" style="display:block;">
+    <h4>👁️ أمراض العين وملحقاتها</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="EyeDiseases_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('EyeDiseases')"></td>
+        <td><input type="number" oninput="calculate('EyeDiseases')"></td>
+        <td><input type="number" oninput="calculate('EyeDiseases')"></td>
+        <td><input type="number" oninput="calculate('EyeDiseases')"></td>
+        <td><input type="number" oninput="calculate('EyeDiseases')"></td>
+        <td id="EyeDiseases_maleTotal">0</td>
+      </tr>
+      <tr id="EyeDiseases_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('EyeDiseases')"></td>
+        <td><input type="number" oninput="calculate('EyeDiseases')"></td>
+        <td><input type="number" oninput="calculate('EyeDiseases')"></td>
+        <td><input type="number" oninput="calculate('EyeDiseases')"></td>
+        <td><input type="number" oninput="calculate('EyeDiseases')"></td>
+        <td id="EyeDiseases_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="EyeDiseases_t1">0</td>
+        <td id="EyeDiseases_t2">0</td>
+        <td id="EyeDiseases_t3">0</td>
+        <td id="EyeDiseases_t4">0</td>
+        <td id="EyeDiseases_t5">0</td>
+        <td id="EyeDiseases_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== المياه الزرقاء ===== -->
+  <div id="Glaucoma" class="subtabcontent">
+    <h4>💧 المياه الزرقاء</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Glaucoma_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Glaucoma')"></td>
+        <td><input type="number" oninput="calculate('Glaucoma')"></td>
+        <td><input type="number" oninput="calculate('Glaucoma')"></td>
+        <td><input type="number" oninput="calculate('Glaucoma')"></td>
+        <td><input type="number" oninput="calculate('Glaucoma')"></td>
+        <td id="Glaucoma_maleTotal">0</td>
+      </tr>
+      <tr id="Glaucoma_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Glaucoma')"></td>
+        <td><input type="number" oninput="calculate('Glaucoma')"></td>
+        <td><input type="number" oninput="calculate('Glaucoma')"></td>
+        <td><input type="number" oninput="calculate('Glaucoma')"></td>
+        <td><input type="number" oninput="calculate('Glaucoma')"></td>
+        <td id="Glaucoma_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Glaucoma_t1">0</td>
+        <td id="Glaucoma_t2">0</td>
+        <td id="Glaucoma_t3">0</td>
+        <td id="Glaucoma_t4">0</td>
+        <td id="Glaucoma_t5">0</td>
+        <td id="Glaucoma_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الاضطرابات بالأذن والنتوء الخشائي ===== -->
+  <div id="EarMalformations" class="subtabcontent">
+    <h4>👂 الاضطرابات بالأذن والنتوء الخشائي</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="EarMalformations_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('EarMalformations')"></td>
+        <td><input type="number" oninput="calculate('EarMalformations')"></td>
+        <td><input type="number" oninput="calculate('EarMalformations')"></td>
+        <td><input type="number" oninput="calculate('EarMalformations')"></td>
+        <td><input type="number" oninput="calculate('EarMalformations')"></td>
+        <td id="EarMalformations_maleTotal">0</td>
+      </tr>
+      <tr id="EarMalformations_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('EarMalformations')"></td>
+        <td><input type="number" oninput="calculate('EarMalformations')"></td>
+        <td><input type="number" oninput="calculate('EarMalformations')"></td>
+        <td><input type="number" oninput="calculate('EarMalformations')"></td>
+        <td><input type="number" oninput="calculate('EarMalformations')"></td>
+        <td id="EarMalformations_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="EarMalformations_t1">0</td>
+        <td id="EarMalformations_t2">0</td>
+        <td id="EarMalformations_t3">0</td>
+        <td id="EarMalformations_t4">0</td>
+        <td id="EarMalformations_t5">0</td>
+        <td id="EarMalformations_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== اضطرابات الأذن (الخارجية) ===== -->
+  <div id="ExternalEarDisorders" class="subtabcontent">
+    <h4>👂 اضطرابات الأذن (الخارجية)</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="ExternalEarDisorders_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('ExternalEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('ExternalEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('ExternalEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('ExternalEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('ExternalEarDisorders')"></td>
+        <td id="ExternalEarDisorders_maleTotal">0</td>
+      </tr>
+      <tr id="ExternalEarDisorders_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('ExternalEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('ExternalEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('ExternalEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('ExternalEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('ExternalEarDisorders')"></td>
+        <td id="ExternalEarDisorders_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="ExternalEarDisorders_t1">0</td>
+        <td id="ExternalEarDisorders_t2">0</td>
+        <td id="ExternalEarDisorders_t3">0</td>
+        <td id="ExternalEarDisorders_t4">0</td>
+        <td id="ExternalEarDisorders_t5">0</td>
+        <td id="ExternalEarDisorders_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== اضطرابات الأذن الوسطى ===== -->
+  <div id="MiddleEarDisorders" class="subtabcontent">
+    <h4>👂 اضطرابات الأذن الوسطى</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="MiddleEarDisorders_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('MiddleEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('MiddleEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('MiddleEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('MiddleEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('MiddleEarDisorders')"></td>
+        <td id="MiddleEarDisorders_maleTotal">0</td>
+      </tr>
+      <tr id="MiddleEarDisorders_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('MiddleEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('MiddleEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('MiddleEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('MiddleEarDisorders')"></td>
+        <td><input type="number" oninput="calculate('MiddleEarDisorders')"></td>
+        <td id="MiddleEarDisorders_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="MiddleEarDisorders_t1">0</td>
+        <td id="MiddleEarDisorders_t2">0</td>
+        <td id="MiddleEarDisorders_t3">0</td>
+        <td id="MiddleEarDisorders_t4">0</td>
+        <td id="MiddleEarDisorders_t5">0</td>
+        <td id="MiddleEarDisorders_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== إجمالي المجموعة 8 ===== -->
+  <div style="text-align:left; font-weight:bold; font-size:18px; color:#004085; margin-top:15px;">
+    إجمالي المجموعة: <span id="G8_total">0</span>
+  </div>
+</div>
+<!-- ===================== المجموعة 9: أمراض القلب والدورة الدموية ===================== -->
+<div id="G9" class="tabcontent">
+  <h3>❤️ أمراض القلب والدورة الدموية</h3>
+
+  <div class="subtab">
+    <button class="subtablinks active" onclick="openSubTab(event,'CardiovascularDisorders')">أمراض الجهاز الدوري القلبي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'AcuteRheumaticFever')">الحمى الروماتيزمية الحادة</button>
+    <button class="subtablinks" onclick="openSubTab(event,'ChronicRheumaticHeartDisease')">أمراض القلب الروماتيزمية المزمنة</button>
+    <button class="subtablinks" onclick="openSubTab(event,'HypertensionDisorders')">أمراض ارتفاع ضغط الدم</button>
+    <button class="subtablinks" onclick="openSubTab(event,'HeartDiseaseDueToHypertension')">أمراض القلب نتيجة ارتفاع ضغط الدم</button>
+    <button class="subtablinks" onclick="openSubTab(event,'IschemicHeartDisease')">الأمراض القلبية الإقفارية (الإسكيمية)</button>
+    <button class="subtablinks" onclick="openSubTab(event,'OtherHeartDiseases')">أشكال أخرى لأمراض القلب</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Hemorrhoids')">البواسير</button>
+  </div>
+
+  <!-- ===== أمراض الجهاز الدوري القلبي ===== -->
+  <div id="CardiovascularDisorders" class="subtabcontent" style="display:block;">
+    <h4>❤️ أمراض الجهاز الدوري القلبي</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="CardiovascularDisorders_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('CardiovascularDisorders')"></td>
+        <td><input type="number" oninput="calculate('CardiovascularDisorders')"></td>
+        <td><input type="number" oninput="calculate('CardiovascularDisorders')"></td>
+        <td><input type="number" oninput="calculate('CardiovascularDisorders')"></td>
+        <td><input type="number" oninput="calculate('CardiovascularDisorders')"></td>
+        <td id="CardiovascularDisorders_maleTotal">0</td>
+      </tr>
+      <tr id="CardiovascularDisorders_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('CardiovascularDisorders')"></td>
+        <td><input type="number" oninput="calculate('CardiovascularDisorders')"></td>
+        <td><input type="number" oninput="calculate('CardiovascularDisorders')"></td>
+        <td><input type="number" oninput="calculate('CardiovascularDisorders')"></td>
+        <td><input type="number" oninput="calculate('CardiovascularDisorders')"></td>
+        <td id="CardiovascularDisorders_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="CardiovascularDisorders_t1">0</td>
+        <td id="CardiovascularDisorders_t2">0</td>
+        <td id="CardiovascularDisorders_t3">0</td>
+        <td id="CardiovascularDisorders_t4">0</td>
+        <td id="CardiovascularDisorders_t5">0</td>
+        <td id="CardiovascularDisorders_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الحمى الروماتيزمية الحادة ===== -->
+  <div id="AcuteRheumaticFever" class="subtabcontent">
+    <h4>🔥 الحمى الروماتيزمية الحادة</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="AcuteRheumaticFever_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('AcuteRheumaticFever')"></td>
+        <td><input type="number" oninput="calculate('AcuteRheumaticFever')"></td>
+        <td><input type="number" oninput="calculate('AcuteRheumaticFever')"></td>
+        <td><input type="number" oninput="calculate('AcuteRheumaticFever')"></td>
+        <td><input type="number" oninput="calculate('AcuteRheumaticFever')"></td>
+        <td id="AcuteRheumaticFever_maleTotal">0</td>
+      </tr>
+      <tr id="AcuteRheumaticFever_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('AcuteRheumaticFever')"></td>
+        <td><input type="number" oninput="calculate('AcuteRheumaticFever')"></td>
+        <td><input type="number" oninput="calculate('AcuteRheumaticFever')"></td>
+        <td><input type="number" oninput="calculate('AcuteRheumaticFever')"></td>
+        <td><input type="number" oninput="calculate('AcuteRheumaticFever')"></td>
+        <td id="AcuteRheumaticFever_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="AcuteRheumaticFever_t1">0</td>
+        <td id="AcuteRheumaticFever_t2">0</td>
+        <td id="AcuteRheumaticFever_t3">0</td>
+        <td id="AcuteRheumaticFever_t4">0</td>
+        <td id="AcuteRheumaticFever_t5">0</td>
+        <td id="AcuteRheumaticFever_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== أمراض القلب الروماتيزمية المزمنة ===== -->
+  <div id="ChronicRheumaticHeartDisease" class="subtabcontent">
+    <h4>❤️ أمراض القلب الروماتيزمية المزمنة</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="ChronicRheumaticHeartDisease_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('ChronicRheumaticHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('ChronicRheumaticHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('ChronicRheumaticHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('ChronicRheumaticHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('ChronicRheumaticHeartDisease')"></td>
+        <td id="ChronicRheumaticHeartDisease_maleTotal">0</td>
+      </tr>
+      <tr id="ChronicRheumaticHeartDisease_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('ChronicRheumaticHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('ChronicRheumaticHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('ChronicRheumaticHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('ChronicRheumaticHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('ChronicRheumaticHeartDisease')"></td>
+        <td id="ChronicRheumaticHeartDisease_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="ChronicRheumaticHeartDisease_t1">0</td>
+        <td id="ChronicRheumaticHeartDisease_t2">0</td>
+        <td id="ChronicRheumaticHeartDisease_t3">0</td>
+        <td id="ChronicRheumaticHeartDisease_t4">0</td>
+        <td id="ChronicRheumaticHeartDisease_t5">0</td>
+        <td id="ChronicRheumaticHeartDisease_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== أمراض ارتفاع ضغط الدم ===== -->
+  <div id="HypertensionDisorders" class="subtabcontent">
+    <h4>🩺 أمراض ارتفاع ضغط الدم</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="HypertensionDisorders_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('HypertensionDisorders')"></td>
+        <td><input type="number" oninput="calculate('HypertensionDisorders')"></td>
+        <td><input type="number" oninput="calculate('HypertensionDisorders')"></td>
+        <td><input type="number" oninput="calculate('HypertensionDisorders')"></td>
+        <td><input type="number" oninput="calculate('HypertensionDisorders')"></td>
+        <td id="HypertensionDisorders_maleTotal">0</td>
+      </tr>
+      <tr id="HypertensionDisorders_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('HypertensionDisorders')"></td>
+        <td><input type="number" oninput="calculate('HypertensionDisorders')"></td>
+        <td><input type="number" oninput="calculate('HypertensionDisorders')"></td>
+        <td><input type="number" oninput="calculate('HypertensionDisorders')"></td>
+        <td><input type="number" oninput="calculate('HypertensionDisorders')"></td>
+        <td id="HypertensionDisorders_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="HypertensionDisorders_t1">0</td>
+        <td id="HypertensionDisorders_t2">0</td>
+        <td id="HypertensionDisorders_t3">0</td>
+        <td id="HypertensionDisorders_t4">0</td>
+        <td id="HypertensionDisorders_t5">0</td>
+        <td id="HypertensionDisorders_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== أمراض القلب نتيجة ارتفاع ضغط الدم ===== -->
+  <div id="HeartDiseaseDueToHypertension" class="subtabcontent">
+    <h4>❤️ أمراض القلب نتيجة ارتفاع ضغط الدم</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="HeartDiseaseDueToHypertension_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('HeartDiseaseDueToHypertension')"></td>
+        <td><input type="number" oninput="calculate('HeartDiseaseDueToHypertension')"></td>
+        <td><input type="number" oninput="calculate('HeartDiseaseDueToHypertension')"></td>
+        <td><input type="number" oninput="calculate('HeartDiseaseDueToHypertension')"></td>
+        <td><input type="number" oninput="calculate('HeartDiseaseDueToHypertension')"></td>
+        <td id="HeartDiseaseDueToHypertension_maleTotal">0</td>
+      </tr>
+      <tr id="HeartDiseaseDueToHypertension_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('HeartDiseaseDueToHypertension')"></td>
+        <td><input type="number" oninput="calculate('HeartDiseaseDueToHypertension')"></td>
+        <td><input type="number" oninput="calculate('HeartDiseaseDueToHypertension')"></td>
+        <td><input type="number" oninput="calculate('HeartDiseaseDueToHypertension')"></td>
+        <td><input type="number" oninput="calculate('HeartDiseaseDueToHypertension')"></td>
+        <td id="HeartDiseaseDueToHypertension_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="HeartDiseaseDueToHypertension_t1">0</td>
+        <td id="HeartDiseaseDueToHypertension_t2">0</td>
+        <td id="HeartDiseaseDueToHypertension_t3">0</td>
+        <td id="HeartDiseaseDueToHypertension_t4">0</td>
+        <td id="HeartDiseaseDueToHypertension_t5">0</td>
+        <td id="HeartDiseaseDueToHypertension_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الأمراض القلبية الإقفارية (الإسكيمية) ===== -->
+  <div id="IschemicHeartDisease" class="subtabcontent">
+    <h4>❤️ الأمراض القلبية الإقفارية (الإسكيمية)</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="IschemicHeartDisease_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('IschemicHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('IschemicHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('IschemicHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('IschemicHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('IschemicHeartDisease')"></td>
+        <td id="IschemicHeartDisease_maleTotal">0</td>
+      </tr>
+      <tr id="IschemicHeartDisease_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('IschemicHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('IschemicHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('IschemicHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('IschemicHeartDisease')"></td>
+        <td><input type="number" oninput="calculate('IschemicHeartDisease')"></td>
+        <td id="IschemicHeartDisease_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="IschemicHeartDisease_t1">0</td>
+        <td id="IschemicHeartDisease_t2">0</td>
+        <td id="IschemicHeartDisease_t3">0</td>
+        <td id="IschemicHeartDisease_t4">0</td>
+        <td id="IschemicHeartDisease_t5">0</td>
+        <td id="IschemicHeartDisease_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+  <!-- ===== أشكال أخرى لأمراض القلب ===== -->
+<div id="OtherHeartDiseases" class="subtabcontent">
+  <h4>❤️ أشكال أخرى لأمراض القلب</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th>
+      <th>1–4</th>
+      <th>5–14</th>
+      <th>15–45</th>
+      <th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+    <tr id="OtherHeartDiseases_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('OtherHeartDiseases')"></td>
+      <td><input type="number" oninput="calculate('OtherHeartDiseases')"></td>
+      <td><input type="number" oninput="calculate('OtherHeartDiseases')"></td>
+      <td><input type="number" oninput="calculate('OtherHeartDiseases')"></td>
+      <td><input type="number" oninput="calculate('OtherHeartDiseases')"></td>
+      <td id="OtherHeartDiseases_maleTotal">0</td>
+    </tr>
+    <tr id="OtherHeartDiseases_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('OtherHeartDiseases')"></td>
+      <td><input type="number" oninput="calculate('OtherHeartDiseases')"></td>
+      <td><input type="number" oninput="calculate('OtherHeartDiseases')"></td>
+      <td><input type="number" oninput="calculate('OtherHeartDiseases')"></td>
+      <td><input type="number" oninput="calculate('OtherHeartDiseases')"></td>
+      <td id="OtherHeartDiseases_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="OtherHeartDiseases_t1">0</td>
+      <td id="OtherHeartDiseases_t2">0</td>
+      <td id="OtherHeartDiseases_t3">0</td>
+      <td id="OtherHeartDiseases_t4">0</td>
+      <td id="OtherHeartDiseases_t5">0</td>
+      <td id="OtherHeartDiseases_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<!-- ===================== G10 ===================== -->
+<div id="G10" class="tabcontent">
+  <h3>🫁 المجموعة العاشرة: أمراض الجهاز التنفسي</h3>
+
+  <!-- ===== أزرار الأمراض ===== -->
+  <div class="subtab">
+    <button class="subtablinks active" onclick="openSubTab(event,'AcuteTonsillitis')">🦠 التهاب اللوزتين الحاد</button>
+    <button class="subtablinks" onclick="openSubTab(event,'ViralFlu')">🤧 النزلة الوافدة / التهاب رئوي فيروسي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Pneumonia')">🫁 الالتهاب الرئوي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'AcuteBronchitis')">🌬️ التهاب القصبات الحاد</button>
+    <button class="subtablinks" onclick="openSubTab(event,'NasalSinusDisorders')">👃 اضطرابات الأنف والجيوب</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Asthma')">🌪️ الربو</button>
+  </div>
+
+  <!-- ===== التهاب اللوزتين الحاد ===== -->
+  <div id="AcuteTonsillitis" class="subtabcontent" style="display:block">
+    <h4>🦠 التهاب اللوزتين الحاد</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="AcuteTonsillitis_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('AcuteTonsillitis')"></td>
+        <td><input type="number" oninput="calculate('AcuteTonsillitis')"></td>
+        <td><input type="number" oninput="calculate('AcuteTonsillitis')"></td>
+        <td><input type="number" oninput="calculate('AcuteTonsillitis')"></td>
+        <td><input type="number" oninput="calculate('AcuteTonsillitis')"></td>
+        <td id="AcuteTonsillitis_maleTotal">0</td>
+      </tr>
+      <tr id="AcuteTonsillitis_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('AcuteTonsillitis')"></td>
+        <td><input type="number" oninput="calculate('AcuteTonsillitis')"></td>
+        <td><input type="number" oninput="calculate('AcuteTonsillitis')"></td>
+        <td><input type="number" oninput="calculate('AcuteTonsillitis')"></td>
+        <td><input type="number" oninput="calculate('AcuteTonsillitis')"></td>
+        <td id="AcuteTonsillitis_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="AcuteTonsillitis_t1">0</td>
+        <td id="AcuteTonsillitis_t2">0</td>
+        <td id="AcuteTonsillitis_t3">0</td>
+        <td id="AcuteTonsillitis_t4">0</td>
+        <td id="AcuteTonsillitis_t5">0</td>
+        <td id="AcuteTonsillitis_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== النزلة الوافدة / التهاب رئوي فيروسي ===== -->
+  <div id="ViralFlu" class="subtabcontent">
+    <h4>🤧 النزلة الوافدة / التهاب رئوي فيروسي</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="ViralFlu_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('ViralFlu')"></td>
+        <td><input type="number" oninput="calculate('ViralFlu')"></td>
+        <td><input type="number" oninput="calculate('ViralFlu')"></td>
+        <td><input type="number" oninput="calculate('ViralFlu')"></td>
+        <td><input type="number" oninput="calculate('ViralFlu')"></td>
+        <td id="ViralFlu_maleTotal">0</td>
+      </tr>
+      <tr id="ViralFlu_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('ViralFlu')"></td>
+        <td><input type="number" oninput="calculate('ViralFlu')"></td>
+        <td><input type="number" oninput="calculate('ViralFlu')"></td>
+        <td><input type="number" oninput="calculate('ViralFlu')"></td>
+        <td><input type="number" oninput="calculate('ViralFlu')"></td>
+        <td id="ViralFlu_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="ViralFlu_t1">0</td>
+        <td id="ViralFlu_t2">0</td>
+        <td id="ViralFlu_t3">0</td>
+        <td id="ViralFlu_t4">0</td>
+        <td id="ViralFlu_t5">0</td>
+        <td id="ViralFlu_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+<div id="Pneumonia" class="subtabcontent">
+  <h4>🫁 الالتهاب الرئوي</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="Pneumonia_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('Pneumonia')"></td>
+      <td><input type="number" oninput="calculate('Pneumonia')"></td>
+      <td><input type="number" oninput="calculate('Pneumonia')"></td>
+      <td><input type="number" oninput="calculate('Pneumonia')"></td>
+      <td><input type="number" oninput="calculate('Pneumonia')"></td>
+      <td id="Pneumonia_maleTotal">0</td>
+    </tr>
+
+    <tr id="Pneumonia_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('Pneumonia')"></td>
+      <td><input type="number" oninput="calculate('Pneumonia')"></td>
+      <td><input type="number" oninput="calculate('Pneumonia')"></td>
+      <td><input type="number" oninput="calculate('Pneumonia')"></td>
+      <td><input type="number" oninput="calculate('Pneumonia')"></td>
+      <td id="Pneumonia_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="Pneumonia_t1">0</td>
+      <td id="Pneumonia_t2">0</td>
+      <td id="Pneumonia_t3">0</td>
+      <td id="Pneumonia_t4">0</td>
+      <td id="Pneumonia_t5">0</td>
+      <td id="Pneumonia_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+
+<div id="AcuteBronchitis" class="subtabcontent">
+  <h4>🌬️ التهاب القصبات الحاد</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="AcuteBronchitis_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('AcuteBronchitis')"></td>
+      <td><input type="number" oninput="calculate('AcuteBronchitis')"></td>
+      <td><input type="number" oninput="calculate('AcuteBronchitis')"></td>
+      <td><input type="number" oninput="calculate('AcuteBronchitis')"></td>
+      <td><input type="number" oninput="calculate('AcuteBronchitis')"></td>
+      <td id="AcuteBronchitis_maleTotal">0</td>
+    </tr>
+
+    <tr id="AcuteBronchitis_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('AcuteBronchitis')"></td>
+      <td><input type="number" oninput="calculate('AcuteBronchitis')"></td>
+      <td><input type="number" oninput="calculate('AcuteBronchitis')"></td>
+      <td><input type="number" oninput="calculate('AcuteBronchitis')"></td>
+      <td><input type="number" oninput="calculate('AcuteBronchitis')"></td>
+      <td id="AcuteBronchitis_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="AcuteBronchitis_t1">0</td>
+      <td id="AcuteBronchitis_t2">0</td>
+      <td id="AcuteBronchitis_t3">0</td>
+      <td id="AcuteBronchitis_t4">0</td>
+      <td id="AcuteBronchitis_t5">0</td>
+      <td id="AcuteBronchitis_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+
+<div id="NasalSinusDisorders" class="subtabcontent">
+  <h4>👃 اضطرابات الأنف والجيوب الأنفية</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="NasalSinusDisorders_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('NasalSinusDisorders')"></td>
+      <td><input type="number" oninput="calculate('NasalSinusDisorders')"></td>
+      <td><input type="number" oninput="calculate('NasalSinusDisorders')"></td>
+      <td><input type="number" oninput="calculate('NasalSinusDisorders')"></td>
+      <td><input type="number" oninput="calculate('NasalSinusDisorders')"></td>
+      <td id="NasalSinusDisorders_maleTotal">0</td>
+    </tr>
+
+    <tr id="NasalSinusDisorders_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('NasalSinusDisorders')"></td>
+      <td><input type="number" oninput="calculate('NasalSinusDisorders')"></td>
+      <td><input type="number" oninput="calculate('NasalSinusDisorders')"></td>
+      <td><input type="number" oninput="calculate('NasalSinusDisorders')"></td>
+      <td><input type="number" oninput="calculate('NasalSinusDisorders')"></td>
+      <td id="NasalSinusDisorders_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="NasalSinusDisorders_t1">0</td>
+      <td id="NasalSinusDisorders_t2">0</td>
+      <td id="NasalSinusDisorders_t3">0</td>
+      <td id="NasalSinusDisorders_t4">0</td>
+      <td id="NasalSinusDisorders_t5">0</td>
+      <td id="NasalSinusDisorders_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+
+<div id="Asthma" class="subtabcontent">
+  <h4>🌪️ الربو</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="Asthma_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('Asthma')"></td>
+      <td><input type="number" oninput="calculate('Asthma')"></td>
+      <td><input type="number" oninput="calculate('Asthma')"></td>
+      <td><input type="number" oninput="calculate('Asthma')"></td>
+      <td><input type="number" oninput="calculate('Asthma')"></td>
+      <td id="Asthma_maleTotal">0</td>
+    </tr>
+
+    <tr id="Asthma_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('Asthma')"></td>
+      <td><input type="number" oninput="calculate('Asthma')"></td>
+      <td><input type="number" oninput="calculate('Asthma')"></td>
+      <td><input type="number" oninput="calculate('Asthma')"></td>
+      <td><input type="number" oninput="calculate('Asthma')"></td>
+      <td id="Asthma_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="Asthma_t1">0</td>
+      <td id="Asthma_t2">0</td>
+      <td id="Asthma_t3">0</td>
+      <td id="Asthma_t4">0</td>
+      <td id="Asthma_t5">0</td>
+      <td id="Asthma_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+
+  <!-- ===== إجمالي المجموعة ===== -->
+  <div style="margin-top:15px; font-size:18px; font-weight:bold; color:#004085;">
+    إجمالي المجموعة العاشرة: <span id="G10_total">0</span>
+  </div>
+</div>
+<!-- ===================== G11 ===================== -->
+<div id="G11" class="tabcontent">
+  <h3>🍽️ المجموعة الحادية عشرة: أمراض الجهاز الهضمي</h3>
+
+  <div class="subtab">
+    <button class="subtablinks active" onclick="openSubTab(event,'OralDiseases')">👄 أمراض الفم</button>
+    <button class="subtablinks" onclick="openSubTab(event,'DentalCaries')">🦷 تسوس الأسنان</button>
+    <button class="subtablinks" onclick="openSubTab(event,'OtherDental')">🪥 أمراض الأسنان الأخرى</button>
+    <button class="subtablinks" onclick="openSubTab(event,'GastricUlcer')">🥣 قرحة المعدة</button>
+    <button class="subtablinks" onclick="openSubTab(event,'DuodenalUlcer')">🥖 قرحة الاثني عشر</button>
+    <button class="subtablinks" onclick="openSubTab(event,'GastritisDuodenitis')">🔥 التهاب المعدة والاثني عشر</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Appendicitis')">🩺 التهاب الزائدة الحاد</button>
+    <button class="subtablinks" onclick="openSubTab(event,'NonInfectiousColitis')">🧻 التهاب الأمعاء والقولون</button>
+    <button class="subtablinks" onclick="openSubTab(event,'LiverDiseases')">🧬 أمراض الكبد</button>
+    <button class="subtablinks" onclick="openSubTab(event,'GallbladderPancreas')">🟢 المرارة والبنكرياس</button>
+  </div>
+  <div id="OralDiseases" class="subtabcontent" style="display:block">
+  <h4>👄 أمراض الفم والغدد اللعابية والفكين</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="OralDiseases_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('OralDiseases')"></td>
+      <td><input type="number" oninput="calculate('OralDiseases')"></td>
+      <td><input type="number" oninput="calculate('OralDiseases')"></td>
+      <td><input type="number" oninput="calculate('OralDiseases')"></td>
+      <td><input type="number" oninput="calculate('OralDiseases')"></td>
+      <td id="OralDiseases_maleTotal">0</td>
+    </tr>
+
+    <tr id="OralDiseases_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('OralDiseases')"></td>
+      <td><input type="number" oninput="calculate('OralDiseases')"></td>
+      <td><input type="number" oninput="calculate('OralDiseases')"></td>
+      <td><input type="number" oninput="calculate('OralDiseases')"></td>
+      <td><input type="number" oninput="calculate('OralDiseases')"></td>
+      <td id="OralDiseases_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="OralDiseases_t1">0</td>
+      <td id="OralDiseases_t2">0</td>
+      <td id="OralDiseases_t3">0</td>
+      <td id="OralDiseases_t4">0</td>
+      <td id="OralDiseases_t5">0</td>
+      <td id="OralDiseases_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="DentalCaries" class="subtabcontent">
+  <h4>🦷 تسوس الأسنان</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="DentalCaries_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('DentalCaries')"></td>
+      <td><input type="number" oninput="calculate('DentalCaries')"></td>
+      <td><input type="number" oninput="calculate('DentalCaries')"></td>
+      <td><input type="number" oninput="calculate('DentalCaries')"></td>
+      <td><input type="number" oninput="calculate('DentalCaries')"></td>
+      <td id="DentalCaries_maleTotal">0</td>
+    </tr>
+
+    <tr id="DentalCaries_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('DentalCaries')"></td>
+      <td><input type="number" oninput="calculate('DentalCaries')"></td>
+      <td><input type="number" oninput="calculate('DentalCaries')"></td>
+      <td><input type="number" oninput="calculate('DentalCaries')"></td>
+      <td><input type="number" oninput="calculate('DentalCaries')"></td>
+      <td id="DentalCaries_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="DentalCaries_t1">0</td>
+      <td id="DentalCaries_t2">0</td>
+      <td id="DentalCaries_t3">0</td>
+      <td id="DentalCaries_t4">0</td>
+      <td id="DentalCaries_t5">0</td>
+      <td id="DentalCaries_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="OtherDental" class="subtabcontent">
+  <h4>🪥 أمراض الأسنان الأخرى</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="OtherDental_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('OtherDental')"></td>
+      <td><input type="number" oninput="calculate('OtherDental')"></td>
+      <td><input type="number" oninput="calculate('OtherDental')"></td>
+      <td><input type="number" oninput="calculate('OtherDental')"></td>
+      <td><input type="number" oninput="calculate('OtherDental')"></td>
+      <td id="OtherDental_maleTotal">0</td>
+    </tr>
+
+    <tr id="OtherDental_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('OtherDental')"></td>
+      <td><input type="number" oninput="calculate('OtherDental')"></td>
+      <td><input type="number" oninput="calculate('OtherDental')"></td>
+      <td><input type="number" oninput="calculate('OtherDental')"></td>
+      <td><input type="number" oninput="calculate('OtherDental')"></td>
+      <td id="OtherDental_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="OtherDental_t1">0</td>
+      <td id="OtherDental_t2">0</td>
+      <td id="OtherDental_t3">0</td>
+      <td id="OtherDental_t4">0</td>
+      <td id="OtherDental_t5">0</td>
+      <td id="OtherDental_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="GastricUlcer" class="subtabcontent">
+  <h4>🥣 قرحة المعدة</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="GastricUlcer_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('GastricUlcer')"></td>
+      <td><input type="number" oninput="calculate('GastricUlcer')"></td>
+      <td><input type="number" oninput="calculate('GastricUlcer')"></td>
+      <td><input type="number" oninput="calculate('GastricUlcer')"></td>
+      <td><input type="number" oninput="calculate('GastricUlcer')"></td>
+      <td id="GastricUlcer_maleTotal">0</td>
+    </tr>
+
+    <tr id="GastricUlcer_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('GastricUlcer')"></td>
+      <td><input type="number" oninput="calculate('GastricUlcer')"></td>
+      <td><input type="number" oninput="calculate('GastricUlcer')"></td>
+      <td><input type="number" oninput="calculate('GastricUlcer')"></td>
+      <td><input type="number" oninput="calculate('GastricUlcer')"></td>
+      <td id="GastricUlcer_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="GastricUlcer_t1">0</td>
+      <td id="GastricUlcer_t2">0</td>
+      <td id="GastricUlcer_t3">0</td>
+      <td id="GastricUlcer_t4">0</td>
+      <td id="GastricUlcer_t5">0</td>
+      <td id="GastricUlcer_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="DuodenalUlcer" class="subtabcontent">
+  <h4>🥖 قرحة الاثني عشر</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="DuodenalUlcer_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('DuodenalUlcer')"></td>
+      <td><input type="number" oninput="calculate('DuodenalUlcer')"></td>
+      <td><input type="number" oninput="calculate('DuodenalUlcer')"></td>
+      <td><input type="number" oninput="calculate('DuodenalUlcer')"></td>
+      <td><input type="number" oninput="calculate('DuodenalUlcer')"></td>
+      <td id="DuodenalUlcer_maleTotal">0</td>
+    </tr>
+
+    <tr id="DuodenalUlcer_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('DuodenalUlcer')"></td>
+      <td><input type="number" oninput="calculate('DuodenalUlcer')"></td>
+      <td><input type="number" oninput="calculate('DuodenalUlcer')"></td>
+      <td><input type="number" oninput="calculate('DuodenalUlcer')"></td>
+      <td><input type="number" oninput="calculate('DuodenalUlcer')"></td>
+      <td id="DuodenalUlcer_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="DuodenalUlcer_t1">0</td>
+      <td id="DuodenalUlcer_t2">0</td>
+      <td id="DuodenalUlcer_t3">0</td>
+      <td id="DuodenalUlcer_t4">0</td>
+      <td id="DuodenalUlcer_t5">0</td>
+      <td id="DuodenalUlcer_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="Appendicitis" class="subtabcontent">
+  <h4>🩺 التهاب الزائدة الحاد</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="Appendicitis_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('Appendicitis')"></td>
+      <td><input type="number" oninput="calculate('Appendicitis')"></td>
+      <td><input type="number" oninput="calculate('Appendicitis')"></td>
+      <td><input type="number" oninput="calculate('Appendicitis')"></td>
+      <td><input type="number" oninput="calculate('Appendicitis')"></td>
+      <td id="Appendicitis_maleTotal">0</td>
+    </tr>
+
+    <tr id="Appendicitis_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('Appendicitis')"></td>
+      <td><input type="number" oninput="calculate('Appendicitis')"></td>
+      <td><input type="number" oninput="calculate('Appendicitis')"></td>
+      <td><input type="number" oninput="calculate('Appendicitis')"></td>
+      <td><input type="number" oninput="calculate('Appendicitis')"></td>
+      <td id="Appendicitis_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="Appendicitis_t1">0</td>
+      <td id="Appendicitis_t2">0</td>
+      <td id="Appendicitis_t3">0</td>
+      <td id="Appendicitis_t4">0</td>
+      <td id="Appendicitis_t5">0</td>
+      <td id="Appendicitis_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="NonInfectiousColitis" class="subtabcontent">
+  <h4>🧻 التهاب غير معدي بالأمعاء والقولون</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="NonInfectiousColitis_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('NonInfectiousColitis')"></td>
+      <td><input type="number" oninput="calculate('NonInfectiousColitis')"></td>
+      <td><input type="number" oninput="calculate('NonInfectiousColitis')"></td>
+      <td><input type="number" oninput="calculate('NonInfectiousColitis')"></td>
+      <td><input type="number" oninput="calculate('NonInfectiousColitis')"></td>
+      <td id="NonInfectiousColitis_maleTotal">0</td>
+    </tr>
+
+    <tr id="NonInfectiousColitis_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('NonInfectiousColitis')"></td>
+      <td><input type="number" oninput="calculate('NonInfectiousColitis')"></td>
+      <td><input type="number" oninput="calculate('NonInfectiousColitis')"></td>
+      <td><input type="number" oninput="calculate('NonInfectiousColitis')"></td>
+      <td><input type="number" oninput="calculate('NonInfectiousColitis')"></td>
+      <td id="NonInfectiousColitis_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="NonInfectiousColitis_t1">0</td>
+      <td id="NonInfectiousColitis_t2">0</td>
+      <td id="NonInfectiousColitis_t3">0</td>
+      <td id="NonInfectiousColitis_t4">0</td>
+      <td id="NonInfectiousColitis_t5">0</td>
+      <td id="NonInfectiousColitis_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<!-- ===================== G12 ===================== -->
+<div id="G12" class="tabcontent">
+  <h3>🩺 المجموعة 12: أمراض الجلد والمفاصل</h3>
+
+  <!-- ===== التبويبات الفرعية ===== -->
+  <div class="subtab">
+    <button class="subtablinks active" onclick="openSubTab(event,'SkinDiseases')">🧴 الجلد</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Cellulitis')">🔥 النسيج الخلوي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Allergy')">🌿 الحساسية</button>
+    <button class="subtablinks" onclick="openSubTab(event,'JointDisorders')">🦴 المفاصل</button>
+    <button class="subtablinks" onclick="openSubTab(event,'BackPain')">💢 آلام الظهر</button>
+  </div>
+  <div id="SkinDiseases" class="subtabcontent" style="display:block;">
+  <h4>🧴 أمراض الجلد والنسيج</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+    <tr id="SkinDiseases_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('SkinDiseases')"></td>
+      <td><input type="number" oninput="calculate('SkinDiseases')"></td>
+      <td><input type="number" oninput="calculate('SkinDiseases')"></td>
+      <td><input type="number" oninput="calculate('SkinDiseases')"></td>
+      <td><input type="number" oninput="calculate('SkinDiseases')"></td>
+      <td id="SkinDiseases_maleTotal">0</td>
+    </tr>
+    <tr id="SkinDiseases_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('SkinDiseases')"></td>
+      <td><input type="number" oninput="calculate('SkinDiseases')"></td>
+      <td><input type="number" oninput="calculate('SkinDiseases')"></td>
+      <td><input type="number" oninput="calculate('SkinDiseases')"></td>
+      <td><input type="number" oninput="calculate('SkinDiseases')"></td>
+      <td id="SkinDiseases_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="SkinDiseases_t1">0</td>
+      <td id="SkinDiseases_t2">0</td>
+      <td id="SkinDiseases_t3">0</td>
+      <td id="SkinDiseases_t4">0</td>
+      <td id="SkinDiseases_t5">0</td>
+      <td id="SkinDiseases_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="Cellulitis" class="subtabcontent">
+  <h4>🔥 التهاب النسيج الخلوي</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+    <tr id="Cellulitis_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('Cellulitis')"></td>
+      <td><input type="number" oninput="calculate('Cellulitis')"></td>
+      <td><input type="number" oninput="calculate('Cellulitis')"></td>
+      <td><input type="number" oninput="calculate('Cellulitis')"></td>
+      <td><input type="number" oninput="calculate('Cellulitis')"></td>
+      <td id="Cellulitis_maleTotal">0</td>
+    </tr>
+    <tr id="Cellulitis_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('Cellulitis')"></td>
+      <td><input type="number" oninput="calculate('Cellulitis')"></td>
+      <td><input type="number" oninput="calculate('Cellulitis')"></td>
+      <td><input type="number" oninput="calculate('Cellulitis')"></td>
+      <td><input type="number" oninput="calculate('Cellulitis')"></td>
+      <td id="Cellulitis_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="Cellulitis_t1">0</td>
+      <td id="Cellulitis_t2">0</td>
+      <td id="Cellulitis_t3">0</td>
+      <td id="Cellulitis_t4">0</td>
+      <td id="Cellulitis_t5">0</td>
+      <td id="Cellulitis_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="Allergy" class="subtabcontent">
+  <h4>🌿 الحساسية</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+    <tr id="Allergy_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('Allergy')"></td>
+      <td><input type="number" oninput="calculate('Allergy')"></td>
+      <td><input type="number" oninput="calculate('Allergy')"></td>
+      <td><input type="number" oninput="calculate('Allergy')"></td>
+      <td><input type="number" oninput="calculate('Allergy')"></td>
+      <td id="Allergy_maleTotal">0</td>
+    </tr>
+    <tr id="Allergy_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('Allergy')"></td>
+      <td><input type="number" oninput="calculate('Allergy')"></td>
+      <td><input type="number" oninput="calculate('Allergy')"></td>
+      <td><input type="number" oninput="calculate('Allergy')"></td>
+      <td><input type="number" oninput="calculate('Allergy')"></td>
+      <td id="Allergy_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="Allergy_t1">0</td>
+      <td id="Allergy_t2">0</td>
+      <td id="Allergy_t3">0</td>
+      <td id="Allergy_t4">0</td>
+      <td id="Allergy_t5">0</td>
+      <td id="Allergy_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="JointDisorders" class="subtabcontent">
+  <h4>🦴 اعتلالات المفاصل</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+    <tr id="JointDisorders_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('JointDisorders')"></td>
+      <td><input type="number" oninput="calculate('JointDisorders')"></td>
+      <td><input type="number" oninput="calculate('JointDisorders')"></td>
+      <td><input type="number" oninput="calculate('JointDisorders')"></td>
+      <td><input type="number" oninput="calculate('JointDisorders')"></td>
+      <td id="JointDisorders_maleTotal">0</td>
+    </tr>
+    <tr id="JointDisorders_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('JointDisorders')"></td>
+      <td><input type="number" oninput="calculate('JointDisorders')"></td>
+      <td><input type="number" oninput="calculate('JointDisorders')"></td>
+      <td><input type="number" oninput="calculate('JointDisorders')"></td>
+      <td><input type="number" oninput="calculate('JointDisorders')"></td>
+      <td id="JointDisorders_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="JointDisorders_t1">0</td>
+      <td id="JointDisorders_t2">0</td>
+      <td id="JointDisorders_t3">0</td>
+      <td id="JointDisorders_t4">0</td>
+      <td id="JointDisorders_t5">0</td>
+      <td id="JointDisorders_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="BackPain" class="subtabcontent">
+  <h4>💢 آلام الظهر مع اعتلالات أخرى</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+    <tr id="BackPain_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('BackPain')"></td>
+      <td><input type="number" oninput="calculate('BackPain')"></td>
+      <td><input type="number" oninput="calculate('BackPain')"></td>
+      <td><input type="number" oninput="calculate('BackPain')"></td>
+      <td><input type="number" oninput="calculate('BackPain')"></td>
+      <td id="BackPain_maleTotal">0</td>
+    </tr>
+    <tr id="BackPain_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('BackPain')"></td>
+      <td><input type="number" oninput="calculate('BackPain')"></td>
+      <td><input type="number" oninput="calculate('BackPain')"></td>
+      <td><input type="number" oninput="calculate('BackPain')"></td>
+      <td><input type="number" oninput="calculate('BackPain')"></td>
+      <td id="BackPain_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="BackPain_t1">0</td>
+      <td id="BackPain_t2">0</td>
+      <td id="BackPain_t3">0</td>
+      <td id="BackPain_t4">0</td>
+      <td id="BackPain_t5">0</td>
+      <td id="BackPain_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div style="text-align:left; font-weight:bold; font-size:18px; color:#155724; margin-top:15px;">
+  إجمالي المجموعة 12: <span id="G12_total">0</span>
+</div>
+
+</div> <!-- نهاية G12 -->
+<!-- ===================== G13 ===================== -->
+<div id="G13" class="tabcontent">
+  <h3>🧬 المجموعة 13: أمراض الجهاز البولي والتناسلي والنفاس</h3>
+
+  <!-- ===== التبويبات الفرعية ===== -->
+  <div class="subtab">
+    <button class="subtablinks active" onclick="openSubTab(event,'UrogenitalDiseases')">🚻 الجهاز البولي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'RenalFailure')">🩺 الفشل الكلوي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'UrinaryStones')">💎 التحصي البولي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'MaleGenitalDiseases')">♂️ تناسلي ذكري</button>
+    <button class="subtablinks" onclick="openSubTab(event,'PostpartumComplications')">🤱 النفاس</button>
+  </div>
+</div>
+  <h4>🚻 أمراض الجهاز التناسلي البولي</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+    <tr id="UrogenitalDiseases_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('UrogenitalDiseases')"></td>
+      <td><input type="number" oninput="calculate('UrogenitalDiseases')"></td>
+      <td><input type="number" oninput="calculate('UrogenitalDiseases')"></td>
+      <td><input type="number" oninput="calculate('UrogenitalDiseases')"></td>
+      <td><input type="number" oninput="calculate('UrogenitalDiseases')"></td>
+      <td id="UrogenitalDiseases_maleTotal">0</td>
+    </tr>
+    <tr id="UrogenitalDiseases_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('UrogenitalDiseases')"></td>
+      <td><input type="number" oninput="calculate('UrogenitalDiseases')"></td>
+      <td><input type="number" oninput="calculate('UrogenitalDiseases')"></td>
+      <td><input type="number" oninput="calculate('UrogenitalDiseases')"></td>
+      <td><input type="number" oninput="calculate('UrogenitalDiseases')"></td>
+      <td id="UrogenitalDiseases_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="UrogenitalDiseases_t1">0</td>
+      <td id="UrogenitalDiseases_t2">0</td>
+      <td id="UrogenitalDiseases_t3">0</td>
+      <td id="UrogenitalDiseases_t4">0</td>
+      <td id="UrogenitalDiseases_t5">0</td>
+      <td id="UrogenitalDiseases_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="RenalFailure" class="subtabcontent">
+  <h4>🩺 الفشل الكلوي الحاد والمزمن</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+    <tr id="RenalFailure_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('RenalFailure')"></td>
+      <td><input type="number" oninput="calculate('RenalFailure')"></td>
+      <td><input type="number" oninput="calculate('RenalFailure')"></td>
+      <td><input type="number" oninput="calculate('RenalFailure')"></td>
+      <td><input type="number" oninput="calculate('RenalFailure')"></td>
+      <td id="RenalFailure_maleTotal">0</td>
+    </tr>
+    <tr id="RenalFailure_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('RenalFailure')"></td>
+      <td><input type="number" oninput="calculate('RenalFailure')"></td>
+      <td><input type="number" oninput="calculate('RenalFailure')"></td>
+      <td><input type="number" oninput="calculate('RenalFailure')"></td>
+      <td><input type="number" oninput="calculate('RenalFailure')"></td>
+      <td id="RenalFailure_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="RenalFailure_t1">0</td>
+      <td id="RenalFailure_t2">0</td>
+      <td id="RenalFailure_t3">0</td>
+      <td id="RenalFailure_t4">0</td>
+      <td id="RenalFailure_t5">0</td>
+      <td id="RenalFailure_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="UrinaryStones" class="subtabcontent">
+  <h4>💎 التحصي البولي</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+    <tr id="UrinaryStones_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('UrinaryStones')"></td>
+      <td><input type="number" oninput="calculate('UrinaryStones')"></td>
+      <td><input type="number" oninput="calculate('UrinaryStones')"></td>
+      <td><input type="number" oninput="calculate('UrinaryStones')"></td>
+      <td><input type="number" oninput="calculate('UrinaryStones')"></td>
+      <td id="UrinaryStones_maleTotal">0</td>
+    </tr>
+    <tr id="UrinaryStones_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('UrinaryStones')"></td>
+      <td><input type="number" oninput="calculate('UrinaryStones')"></td>
+      <td><input type="number" oninput="calculate('UrinaryStones')"></td>
+      <td><input type="number" oninput="calculate('UrinaryStones')"></td>
+      <td><input type="number" oninput="calculate('UrinaryStones')"></td>
+      <td id="UrinaryStones_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="UrinaryStones_t1">0</td>
+      <td id="UrinaryStones_t2">0</td>
+      <td id="UrinaryStones_t3">0</td>
+      <td id="UrinaryStones_t4">0</td>
+      <td id="UrinaryStones_t5">0</td>
+      <td id="UrinaryStones_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+<div id="PostpartumComplications" class="subtabcontent">
+  <h4>🤱 مضاعفات ذات علاقة بالنفاس</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+    <tr id="PostpartumComplications_male">
+      <td>ذكور</td>
+      <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+      <td id="PostpartumComplications_maleTotal">0</td>
+    </tr>
+    <tr id="PostpartumComplications_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('PostpartumComplications')"></td>
+      <td><input type="number" oninput="calculate('PostpartumComplications')"></td>
+      <td><input type="number" oninput="calculate('PostpartumComplications')"></td>
+      <td><input type="number" oninput="calculate('PostpartumComplications')"></td>
+      <td><input type="number" oninput="calculate('PostpartumComplications')"></td>
+      <td id="PostpartumComplications_femaleTotal">0</td>
+    </tr>
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="PostpartumComplications_t1">0</td>
+      <td id="PostpartumComplications_t2">0</td>
+      <td id="PostpartumComplications_t3">0</td>
+      <td id="PostpartumComplications_t4">0</td>
+      <td id="PostpartumComplications_t5">0</td>
+      <td id="PostpartumComplications_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+</div>
+
+<!-- ===================== المجموعة 14: الإصابات والحوادث ===================== -->
+<div id="G14" class="tabcontent">
+  <h3>🚑 الإصابات والحوادث</h3>
+
+  <div class="subtab">
+    <button class="subtablinks active" onclick="openSubTab(event,'InjuriesFractures')">إصابات وكسر 🩹</button>
+    <button class="subtablinks" onclick="openSubTab(event,'BurnsWounds')">الحروق وجروح 🔥</button>
+    <button class="subtablinks" onclick="openSubTab(event,'OtherAccidents')">الأسباب الخارجية الأخرى للحوادث ⚠️</button>
+    <button class="subtablinks" onclick="openSubTab(event,'TransportAccidents')">حوادث النقل 🚗</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Falls')">السقوط 🤸‍♂️</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Drowning')">الغرق والغمر بالماء 🌊</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Assault')">الاعتداء ✋</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Other')">أخرى ❓</button>
+  </div>
+
+  <!-- ===== إصابات وكسر ===== -->
+  <div id="InjuriesFractures" class="subtabcontent" style="display:block;">
+    <h4>🩹 إصابات وكسر</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="InjuriesFractures_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('InjuriesFractures')"></td>
+        <td><input type="number" oninput="calculate('InjuriesFractures')"></td>
+        <td><input type="number" oninput="calculate('InjuriesFractures')"></td>
+        <td><input type="number" oninput="calculate('InjuriesFractures')"></td>
+        <td><input type="number" oninput="calculate('InjuriesFractures')"></td>
+        <td id="InjuriesFractures_maleTotal">0</td>
+      </tr>
+      <tr id="InjuriesFractures_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('InjuriesFractures')"></td>
+        <td><input type="number" oninput="calculate('InjuriesFractures')"></td>
+        <td><input type="number" oninput="calculate('InjuriesFractures')"></td>
+        <td><input type="number" oninput="calculate('InjuriesFractures')"></td>
+        <td><input type="number" oninput="calculate('InjuriesFractures')"></td>
+        <td id="InjuriesFractures_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="InjuriesFractures_t1">0</td>
+        <td id="InjuriesFractures_t2">0</td>
+        <td id="InjuriesFractures_t3">0</td>
+        <td id="InjuriesFractures_t4">0</td>
+        <td id="InjuriesFractures_t5">0</td>
+        <td id="InjuriesFractures_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الحروق والجروح ===== -->
+  <div id="BurnsWounds" class="subtabcontent">
+    <h4>🔥 الحروق وجروح</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="BurnsWounds_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('BurnsWounds')"></td>
+        <td><input type="number" oninput="calculate('BurnsWounds')"></td>
+        <td><input type="number" oninput="calculate('BurnsWounds')"></td>
+        <td><input type="number" oninput="calculate('BurnsWounds')"></td>
+        <td><input type="number" oninput="calculate('BurnsWounds')"></td>
+        <td id="BurnsWounds_maleTotal">0</td>
+      </tr>
+      <tr id="BurnsWounds_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('BurnsWounds')"></td>
+        <td><input type="number" oninput="calculate('BurnsWounds')"></td>
+        <td><input type="number" oninput="calculate('BurnsWounds')"></td>
+        <td><input type="number" oninput="calculate('BurnsWounds')"></td>
+        <td><input type="number" oninput="calculate('BurnsWounds')"></td>
+        <td id="BurnsWounds_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="BurnsWounds_t1">0</td>
+        <td id="BurnsWounds_t2">0</td>
+        <td id="BurnsWounds_t3">0</td>
+        <td id="BurnsWounds_t4">0</td>
+        <td id="BurnsWounds_t5">0</td>
+        <td id="BurnsWounds_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الأسباب الخارجية الأخرى للحوادث ===== -->
+  <div id="OtherAccidents" class="subtabcontent">
+    <h4>⚠️ الأسباب الخارجية الأخرى للحوادث</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="OtherAccidents_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('OtherAccidents')"></td>
+        <td><input type="number" oninput="calculate('OtherAccidents')"></td>
+        <td><input type="number" oninput="calculate('OtherAccidents')"></td>
+        <td><input type="number" oninput="calculate('OtherAccidents')"></td>
+        <td><input type="number" oninput="calculate('OtherAccidents')"></td>
+        <td id="OtherAccidents_maleTotal">0</td>
+      </tr>
+      <tr id="OtherAccidents_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('OtherAccidents')"></td>
+        <td><input type="number" oninput="calculate('OtherAccidents')"></td>
+        <td><input type="number" oninput="calculate('OtherAccidents')"></td>
+        <td><input type="number" oninput="calculate('OtherAccidents')"></td>
+        <td><input type="number" oninput="calculate('OtherAccidents')"></td>
+        <td id="OtherAccidents_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="OtherAccidents_t1">0</td>
+        <td id="OtherAccidents_t2">0</td>
+        <td id="OtherAccidents_t3">0</td>
+        <td id="OtherAccidents_t4">0</td>
+        <td id="OtherAccidents_t5">0</td>
+        <td id="OtherAccidents_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== حوادث النقل ===== -->
+  <div id="TransportAccidents" class="subtabcontent">
+    <h4>🚗 حوادث النقل</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="TransportAccidents_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('TransportAccidents')"></td>
+        <td><input type="number" oninput="calculate('TransportAccidents')"></td>
+        <td><input type="number" oninput="calculate('TransportAccidents')"></td>
+        <td><input type="number" oninput="calculate('TransportAccidents')"></td>
+        <td><input type="number" oninput="calculate('TransportAccidents')"></td>
+        <td id="TransportAccidents_maleTotal">0</td>
+      </tr>
+      <tr id="TransportAccidents_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('TransportAccidents')"></td>
+        <td><input type="number" oninput="calculate('TransportAccidents')"></td>
+        <td><input type="number" oninput="calculate('TransportAccidents')"></td>
+        <td><input type="number" oninput="calculate('TransportAccidents')"></td>
+        <td><input type="number" oninput="calculate('TransportAccidents')"></td>
+        <td id="TransportAccidents_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="TransportAccidents_t1">0</td>
+        <td id="TransportAccidents_t2">0</td>
+        <td id="TransportAccidents_t3">0</td>
+        <td id="TransportAccidents_t4">0</td>
+        <td id="TransportAccidents_t5">0</td>
+        <td id="TransportAccidents_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== السقوط ===== -->
+  <div id="Falls" class="subtabcontent">
+    <h4>🤸‍♂️ السقوط</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Falls_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Falls')"></td>
+        <td><input type="number" oninput="calculate('Falls')"></td>
+        <td><input type="number" oninput="calculate('Falls')"></td>
+        <td><input type="number" oninput="calculate('Falls')"></td>
+        <td><input type="number" oninput="calculate('Falls')"></td>
+        <td id="Falls_maleTotal">0</td>
+      </tr>
+      <tr id="Falls_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Falls')"></td>
+        <td><input type="number" oninput="calculate('Falls')"></td>
+        <td><input type="number" oninput="calculate('Falls')"></td>
+        <td><input type="number" oninput="calculate('Falls')"></td>
+        <td><input type="number" oninput="calculate('Falls')"></td>
+        <td id="Falls_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Falls_t1">0</td>
+        <td id="Falls_t2">0</td>
+        <td id="Falls_t3">0</td>
+        <td id="Falls_t4">0</td>
+        <td id="Falls_t5">0</td>
+        <td id="Falls_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الغرق والغمر بالماء ===== -->
+  <div id="Drowning" class="subtabcontent">
+    <h4>🌊 الغرق والغمر بالماء</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Drowning_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Drowning')"></td>
+        <td><input type="number" oninput="calculate('Drowning')"></td>
+        <td><input type="number" oninput="calculate('Drowning')"></td>
+        <td><input type="number" oninput="calculate('Drowning')"></td>
+        <td><input type="number" oninput="calculate('Drowning')"></td>
+        <td id="Drowning_maleTotal">0</td>
+      </tr>
+      <tr id="Drowning_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Drowning')"></td>
+        <td><input type="number" oninput="calculate('Drowning')"></td>
+        <td><input type="number" oninput="calculate('Drowning')"></td>
+        <td><input type="number" oninput="calculate('Drowning')"></td>
+        <td><input type="number" oninput="calculate('Drowning')"></td>
+        <td id="Drowning_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Drowning_t1">0</td>
+        <td id="Drowning_t2">0</td>
+        <td id="Drowning_t3">0</td>
+        <td id="Drowning_t4">0</td>
+        <td id="Drowning_t5">0</td>
+        <td id="Drowning_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ===== الاعتداء ===== -->
+  <div id="Assault" class="subtabcontent">
+    <h4>✋ الاعتداء</h4>
+    <table>
+      <tr>
+        <th>الجنس\العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th>
+      </tr>
+      <tr id="Assault_male">
+        <td>ذكور</td>
+        <td><input type="number" oninput="calculate('Assault')"></td>
+        <td><input type="number" oninput="calculate('Assault')"></td>
+        <td><input type="number" oninput="calculate('Assault')"></td>
+        <td><input type="number" oninput="calculate('Assault')"></td>
+        <td><input type="number" oninput="calculate('Assault')"></td>
+        <td id="Assault_maleTotal">0</td>
+      </tr>
+      <tr id="Assault_female">
+        <td>إناث</td>
+        <td><input type="number" oninput="calculate('Assault')"></td>
+        <td><input type="number" oninput="calculate('Assault')"></td>
+        <td><input type="number" oninput="calculate('Assault')"></td>
+        <td><input type="number" oninput="calculate('Assault')"></td>
+        <td><input type="number" oninput="calculate('Assault')"></td>
+        <td id="Assault_femaleTotal">0</td>
+      </tr>
+      <tr class="total">
+        <td>الإجمالي الكلي</td>
+        <td id="Assault_t1">0</td>
+        <td id="Assault_t2">0</td>
+        <td id="Assault_t3">0</td>
+        <td id="Assault_t4">0</td>
+        <td id="Assault_t5">0</td>
+        <td id="Assault_grandTotal">0</td>
+      </tr>
+    </table>
+  </div>
+<!-- ===== أخرى ===== -->
+<div id="Other" class="subtabcontent">
+  <h4>❓ أخرى</h4>
+  <table>
+    <tr>
+      <th>الجنس\العمر</th>
+      <th>&lt;1</th>
+      <th>1–4</th>
+      <th>5–14</th>
+      <th>15–45</th>
+      <th>45+</th>
+      <th>الإجمالي</th>
+    </tr>
+
+    <tr id="Other_male">
+      <td>ذكور</td>
+      <td><input type="number" oninput="calculate('Other')"></td>
+      <td><input type="number" oninput="calculate('Other')"></td>
+      <td><input type="number" oninput="calculate('Other')"></td>
+      <td><input type="number" oninput="calculate('Other')"></td>
+      <td><input type="number" oninput="calculate('Other')"></td>
+      <td id="Other_maleTotal">0</td>
+    </tr>
+
+    <tr id="Other_female">
+      <td>إناث</td>
+      <td><input type="number" oninput="calculate('Other')"></td>
+      <td><input type="number" oninput="calculate('Other')"></td>
+      <td><input type="number" oninput="calculate('Other')"></td>
+      <td><input type="number" oninput="calculate('Other')"></td>
+      <td><input type="number" oninput="calculate('Other')"></td>
+      <td id="Other_femaleTotal">0</td>
+    </tr>
+
+    <tr class="total">
+      <td>الإجمالي الكلي</td>
+      <td id="Other_t1">0</td>
+      <td id="Other_t2">0</td>
+      <td id="Other_t3">0</td>
+      <td id="Other_t4">0</td>
+      <td id="Other_t5">0</td>
+      <td id="Other_grandTotal">0</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ===== إجمالي المجموعة 14 ===== -->
+<div style="text-align:left; font-weight:bold; font-size:18px; color:#004085; margin-top:15px;">
+  إجمالي المجموعة: <span id="G14_total">0</span>
+</div>
+<!-- ================== الإجمالي العام لكل فئة ================== -->
+<div style="margin-top:25px; padding:10px; font-weight:bold; font-size:18px; color:#004085; border-top:2px solid #004085;">
+  <h3>📊 الإجمالي العام لكل فئة عمرية</h3>
+  <table style="width:100%; text-align:center; border-collapse:collapse;" border="1">
+    <tr style="background-color:#e0f0ff;">
+      <th>الفئة العمرية</th>
+      <th>&lt;1</th>
+      <th>1–4</th>
+      <th>5–14</th>
+      <th>15–45</th>
+      <th>45+</th>
+      <th>الإجمالي الكلي</th>
+    </tr>
+    <tr>
+      <td>إجمالي الذكور + الإناث</td>
+      <td id="grand_t1">0</td>
+      <td id="grand_t2">0</td>
+      <td id="grand_t3">0</td>
+      <td id="grand_t4">0</td>
+      <td id="grand_t5">0</td>
+      <td id="grand_total">0</td>
+    </tr>
+  </table>
+</div>
+<!-- ===== مؤشرات الخطر العالمية ===== -->
+<div style="margin-top:30px; text-align:center;">
+  <h3>📊 مؤشرات الخطر العالمية لكل مجموعة من الأمراض</h3>
+  <canvas id="globalRiskChart" width="900" height="400"></canvas>
+</div>
+<!-- ===== الرسم البياني لمؤشرات الخطر ===== -->
+<div class="chart-container" style="width: 100%; max-width: 900px; margin: 20px auto;">
+  <canvas id="globalRiskChart"></canvas>
+</div>
+
+<!-- ===== تحميل مكتبة Chart.js ثم ملف app.js ===== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="app.js"></script>
+<!-- ================== معلومات المرفق الصحي ================== -->
+<div id="healthFacilityInfo" style="margin-bottom:20px; padding:15px; border:1px solid #ccc; border-radius:5px; background-color:#f0f8ff;">
+  <h3>🏥 معلومات المرفق الصحي</h3>
+  <table style="width:100%; font-size:16px;">
+    <tr>
+      <td style="width:200px;"><label for="facilityManager">🧑‍💼 اسم مدير المرفق الصحي:</label></td>
+      <td><input type="text" id="facilityManager" placeholder="أدخل اسم المدير" style="width:100%; padding:5px;"></td>
+    </tr>
+    <tr>
+      <td><label for="statisticsOfficer">📊 اسم مسؤول الإحصاء:</label></td>
+      <td><input type="text" id="statisticsOfficer" placeholder="أدخل اسم المسؤول" style="width:100%; padding:5px;"></td>
+    </tr>
+  </table>
+</div>
+<div style="margin-top:40px;">
+  <h3>📊 مؤشرات الخطر العالمية للأمراض</h3>
+  <canvas id="globalRiskChart" width="100%" height="50"></canvas>
+</div>
+<!-- ===== شريط الأزرار ===== -->
+<div class="report-actions">
+<button onclick="printReport(event)" class="action-btn print-btn">🖨 طباعة</button>
+  <button class="action-btn save-btn" onclick="saveReport()">💾 حفظ التقرير</button>
+  <button class="action-btn load-btn" onclick="loadReport()">📂 استرجاع التقرير</button>
+</div>
+<!-- ===== ستايلات بسيطة للأزرار ===== -->
+<style>
+  .btn {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #fff;
+    transition: 0.3s;
+  }
+  .btn-download { background-color: #007bff; }
+  .btn-download:hover { background-color: #0056b3; }
+  
+  .btn-whatsapp { background-color: #25D366; }
+  .btn-whatsapp:hover { background-color: #128C7E; }
+  
+  .btn-telegram { background-color: #0088cc; }
+  .btn-telegram:hover { background-color: #006699; }
+</style>
+ <script>
+
+function printReport(e){
+  if(e) e.preventDefault();
+
+  setTimeout(()=>{
+    window.print();
+  },100);
+   }
+
+/* 💾 حفظ */
+function saveReport(){
+
+  let data = [];
+
+  document.querySelectorAll("#tableBody tr").forEach(row=>{
+    let cells = row.querySelectorAll("td");
+
+    data.push({
+      col1: cells[0]?.innerText,
+      col2: cells[1]?.innerText,
+      col3: cells[2]?.innerText,
+      col4: cells[3]?.innerText
+    });
+  });
+
+  localStorage.setItem("healthReport", JSON.stringify(data));
+
+  alert("💾 تم حفظ التقرير");
+}
+
+/* 📂 استرجاع */
+function loadReport(){
+
+  let saved = localStorage.getItem("healthReport");
+
+  if(!saved){
+    alert("❌ لا يوجد تقرير محفوظ");
+    return;
+  }
+
+  let data = JSON.parse(saved);
+
+  let tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
+
+  data.forEach((row,i)=>{
+    tbody.innerHTML += `
+      <tr>
+        <td>${row.col1 || i+1}</td>
+        <td>${row.col2 || ""}</td>
+        <td>${row.col3 || ""}</td>
+        <td>${row.col4 || ""}</td>
+      </tr>
+    `;
+  });
+
+  alert("✅ تم استرجاع التقرير");
+}
+
+ </script> 
+
+<!-- ===== كود JavaScript للأزرار ===== -->
+<script>
+function sendWhatsApp() {
+  const phone = "00967711129611"; // الرقم الدولي
+  const message = encodeURIComponent("📊 هذا تقرير الإحصاء الوطني للأمراض.");
+  const url = `https://wa.me/${phone}?text=${message}`;
+  window.open(url, "_blank");
+}
+
+function sendTelegram() {
+  const username = "YOUR_TELEGRAM_USERNAME"; // ضع هنا اسم المستخدم أو معرف القناة
+  const message = encodeURIComponent("📊 هذا تقرير الإحصاء الوطني للأمراض.");
+  const url = `https://t.me/${username}?text=${message}`;
+  window.open(url, "_blank");
+}
+</script>
+
+<!-- مكتبة Excel -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <!-- ===== إجمالي المجموعة ===== -->
+<script src="app.js"></script>
+</body>
+</html>

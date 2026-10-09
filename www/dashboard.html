@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>بوابة الرعاية الصحية الأولية</title>
+<style>
+  body { font-family: Tahoma, Arial; background:#f0f2f5; margin:0; padding:0; }
+  h1,h2,h3,h4 { margin:5px 0; }
+  h1 { text-align:center; color:#004085; font-size:28px; }
+  #loginPage { display:flex; justify-content:center; align-items:center; height:100vh; flex-direction:column; background:#cfe2ff; }
+  #loginPage input { padding:8px 12px; margin:5px 0; width:250px; font-size:16px; }
+  #loginPage button { padding:8px 15px; font-size:16px; background:#004085; color:white; border:none; cursor:pointer; margin-top:10px; }
+  #loginPage button:hover { background:#003366; }
+  p { text-align:center; margin-top:15px; }
+  p a { text-decoration:none; color:#004085; font-weight:bold; margin:0 10px; }
+
+  #dashboard { display:none; padding:20px; }
+  #logoSection { text-align:center; margin-bottom:20px; }
+  #logoSection img { max-width:150px; }
+  .mainTab { overflow:hidden; border-bottom:2px solid #ccc; margin-bottom:20px; }
+  .mainTab button { background:#eee; border:none; outline:none; cursor:pointer; padding:10px 20px; margin-left:3px; font-weight:bold; transition:0.3s; font-size:16px; }
+  .mainTab button.active { background:#007bff; color:white; }
+  .subtab { overflow:hidden; margin-bottom:15px; text-align:right; }
+  .subtab button { background:#ddd; border:none; outline:none; cursor:pointer; padding:6px 15px; margin-left:3px; font-weight:bold; transition:0.3s; }
+  .subtab button.active { background:#17a2b8; color:white; }
+  .tabcontent, .subtabcontent { display:none; animation: fadeEffect 0.5s; }
+  @keyframes fadeEffect { from {opacity:0;} to {opacity:1;} }
+  table { width:100%; border-collapse:collapse; margin-bottom:20px; background:#fff; }
+  th, td { border:1px solid #ccc; text-align:center; padding:6px; }
+  th { background:#17a2b8; color:white; }
+  input[type="number"] { width:60px; padding:3px; text-align:center; }
+  .total { background:#e9ecef; font-weight:bold; }
+  select { padding:5px; margin:0 5px; }
+  .footer { margin-top:30px; display:flex; justify-content:space-between; font-weight:bold; font-size:14px; color:#007bff; }
+</style>
+</head>
+<body>
+
+<!-- شاشة الدخول -->
+<div id="loginPage">
+  <h1>تسجيل الدخول 🔒</h1>
+  <input type="text" id="username" placeholder="اسم المستخدم" required>
+  <input type="password" id="password" placeholder="كلمة المرور" required>
+  <button onclick="login()">دخول</button>
+  <p>
+    للتواصل:
+    <a href="https://wa.me/711129611" target="_blank">واتساب 📱</a> |
+    <a href="https://t.me/711129611" target="_blank">تليجرام 📱</a>
+  </p>
+</div>
+
+<!-- لوحة التحكم -->
+<div id="dashboard">
+  <div id="logoSection">
+    <img src="assets/logo.png" alt="شعار وزارة الصحة والبيئة">
+    <h2>وزارة الصحة والبيئة - مكتب الصحة والبيئة مديرية العدين</h2>
+  </div>
+
+  <!-- اختيار المرفق والفترة -->
+  <div style="margin-bottom:20px;">
+    <label>المحافظة:</label>
+    <select id="governorate" onchange="populateDistricts()">
+      <option value="">اختر المحافظة</option>
+      <option value="اب">إب</option>
+      <option value="صنعاء">صنعاء</option>
+      <option value="تعز">تعز</option>
+    </select>
+    <label>المديرية:</label>
+    <select id="district"><option value="">اختر المديرية</option></select>
+    <label>السنة:</label>
+    <input type="number" id="year" min="2000" max="2100" value="2026">
+    <label>الشهر:</label>
+    <select id="month">
+      <option value="1">يناير</option>
+      <option value="2">فبراير</option>
+      <option value="3">مارس</option>
+      <option value="4">أبريل</option>
+      <option value="5">مايو</option>
+      <option value="6">يونيو</option>
+      <option value="7">يوليو</option>
+      <option value="8">أغسطس</option>
+      <option value="9">سبتمبر</option>
+      <option value="10">أكتوبر</option>
+      <option value="11">نوفمبر</option>
+      <option value="12">ديسمبر</option>
+    </select>
+  </div>
+
+  <!-- تبويبات المجموعات -->
+  <div class="mainTab">
+    <button class="mainTablinks active" onclick="openMainTab(event,'G1')">💧 الإسهالات والأمراض المعوية</button>
+    <button class="mainTablinks" onclick="openMainTab(event,'G2')">🦠 الحمى والأمراض الطفيلية</button>
+    <button class="mainTablinks" onclick="openMainTab(event,'G3')">🌬️ الجهاز التنفسي</button>
+  </div>
+
+  <!-- محتوى المجموعات -->
+  <div id="G1" class="tabcontent" style="display:block;">
+    <h3>💧 الإسهالات والأمراض المعوية</h3>
+    <div class="subtab">
+      <button class="subtablinks active" onclick="openSubTab(event,'Cholera')">الكوليرا</button>
+    </div>
+    <div id="Cholera" class="subtabcontent" style="display:block;">
+      <h4>💧 الكوليرا</h4>
+      <table>
+        <tr><th>الجنس \ العمر</th><th>&lt; سنة</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th></tr>
+        <tr><td>ذكور</td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td class="total" id="Cholera_maleTotal">0</td>
+        </tr>
+        <tr><td>إناث</td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td><input type="number" oninput="calculate('Cholera')"></td>
+          <td class="total" id="Cholera_femaleTotal">0</td>
+        </tr>
+        <tr class="total">
+          <td>الإجمالي الكلي</td>
+          <td id="Cholera_t1">0</td>
+          <td id="Cholera_t2">0</td>
+          <td id="Cholera_t3">0</td>
+          <td id="Cholera_t4">0</td>
+          <td id="Cholera_t5">0</td>
+          <td id="Cholera_grandTotal">0</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+<!-- المجموعة الثانية: 🦠 الحمى والأمراض الطفيلية -->
+<div id="G2" class="tabcontent">
+  <h3>🦠 الحمى والأمراض الطفيلية</h3>
+  <div class="subtab">
+    <button class="subtablinks active" onclick="openSubTab(event,'Malaria')">الملاريا</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Dengue')">حمى الضنك</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Typhoid')">حمى التيفوئيد</button>
+  </div>
+
+  <!-- الملاريا -->
+  <div id="Malaria" class="subtabcontent" style="display:block;">
+    <h4>الملاريا</h4>
+    <table>
+      <tr><th>الجنس \ العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th></tr>
+      <tr><td>ذكور</td><td><input type="number" oninput="calculate('Malaria')"></td><td><input type="number" oninput="calculate('Malaria')"></td><td><input type="number" oninput="calculate('Malaria')"></td><td><input type="number" oninput="calculate('Malaria')"></td><td><input type="number" oninput="calculate('Malaria')"></td><td class="total" id="Malaria_maleTotal">0</td></tr>
+      <tr><td>إناث</td><td><input type="number" oninput="calculate('Malaria')"></td><td><input type="number" oninput="calculate('Malaria')"></td><td><input type="number" oninput="calculate('Malaria')"></td><td><input type="number" oninput="calculate('Malaria')"></td><td><input type="number" oninput="calculate('Malaria')"></td><td class="total" id="Malaria_femaleTotal">0</td></tr>
+      <tr class="total"><td>الإجمالي الكلي</td><td id="Malaria_t1">0</td><td id="Malaria_t2">0</td><td id="Malaria_t3">0</td><td id="Malaria_t4">0</td><td id="Malaria_t5">0</td><td id="Malaria_grandTotal">0</td></tr>
+    </table>
+  </div>
+
+  <!-- حمى الضنك -->
+  <div id="Dengue" class="subtabcontent">
+    <h4>حمى الضنك</h4>
+    <table>
+      <tr><th>الجنس \ العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th></tr>
+      <tr><td>ذكور</td><td><input type="number" oninput="calculate('Dengue')"></td><td><input type="number" oninput="calculate('Dengue')"></td><td><input type="number" oninput="calculate('Dengue')"></td><td><input type="number" oninput="calculate('Dengue')"></td><td><input type="number" oninput="calculate('Dengue')"></td><td class="total" id="Dengue_maleTotal">0</td></tr>
+      <tr><td>إناث</td><td><input type="number" oninput="calculate('Dengue')"></td><td><input type="number" oninput="calculate('Dengue')"></td><td><input type="number" oninput="calculate('Dengue')"></td><td><input type="number" oninput="calculate('Dengue')"></td><td><input type="number" oninput="calculate('Dengue')"></td><td class="total" id="Dengue_femaleTotal">0</td></tr>
+      <tr class="total"><td>الإجمالي الكلي</td><td id="Dengue_t1">0</td><td id="Dengue_t2">0</td><td id="Dengue_t3">0</td><td id="Dengue_t4">0</td><td id="Dengue_t5">0</td><td id="Dengue_grandTotal">0</td></tr>
+    </table>
+  </div>
+
+  <!-- حمى التيفوئيد -->
+  <div id="Typhoid" class="subtabcontent">
+    <h4>حمى التيفوئيد</h4>
+    <table>
+      <tr><th>الجنس \ العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th></tr>
+      <tr><td>ذكور</td><td><input type="number" oninput="calculate('Typhoid')"></td><td><input type="number" oninput="calculate('Typhoid')"></td><td><input type="number" oninput="calculate('Typhoid')"></td><td><input type="number" oninput="calculate('Typhoid')"></td><td><input type="number" oninput="calculate('Typhoid')"></td><td class="total" id="Typhoid_maleTotal">0</td></tr>
+      <tr><td>إناث</td><td><input type="number" oninput="calculate('Typhoid')"></td><td><input type="number" oninput="calculate('Typhoid')"></td><td><input type="number" oninput="calculate('Typhoid')"></td><td><input type="number" oninput="calculate('Typhoid')"></td><td><input type="number" oninput="calculate('Typhoid')"></td><td class="total" id="Typhoid_femaleTotal">0</td></tr>
+      <tr class="total"><td>الإجمالي الكلي</td><td id="Typhoid_t1">0</td><td id="Typhoid_t2">0</td><td id="Typhoid_t3">0</td><td id="Typhoid_t4">0</td><td id="Typhoid_t5">0</td><td id="Typhoid_grandTotal">0</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- المجموعة الثالثة: 🌬️ الجهاز التنفسي -->
+<div id="G3" class="tabcontent">
+  <h3>🌬️ الجهاز التنفسي</h3>
+  <div class="subtab">
+    <button class="subtablinks active" onclick="openSubTab(event,'ARI')">أمراض الجهاز التنفسي الحادة</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Pneumonia')">الالتهاب الرئوي</button>
+    <button class="subtablinks" onclick="openSubTab(event,'Influenza')">الانفلونزا</button>
+  </div>
+
+  <!-- أمراض الجهاز التنفسي الحادة -->
+  <div id="ARI" class="subtabcontent" style="display:block;">
+    <h4>أمراض الجهاز التنفسي الحادة</h4>
+    <table>
+      <tr><th>الجنس \ العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th></tr>
+      <tr><td>ذكور</td><td><input type="number" oninput="calculate('ARI')"></td><td><input type="number" oninput="calculate('ARI')"></td><td><input type="number" oninput="calculate('ARI')"></td><td><input type="number" oninput="calculate('ARI')"></td><td><input type="number" oninput="calculate('ARI')"></td><td class="total" id="ARI_maleTotal">0</td></tr>
+      <tr><td>إناث</td><td><input type="number" oninput="calculate('ARI')"></td><td><input type="number" oninput="calculate('ARI')"></td><td><input type="number" oninput="calculate('ARI')"></td><td><input type="number" oninput="calculate('ARI')"></td><td><input type="number" oninput="calculate('ARI')"></td><td class="total" id="ARI_femaleTotal">0</td></tr>
+      <tr class="total"><td>الإجمالي الكلي</td><td id="ARI_t1">0</td><td id="ARI_t2">0</td><td id="ARI_t3">0</td><td id="ARI_t4">0</td><td id="ARI_t5">0</td><td id="ARI_grandTotal">0</td></tr>
+    </table>
+  </div>
+
+  <!-- الالتهاب الرئوي -->
+  <div id="Pneumonia" class="subtabcontent">
+    <h4>الالتهاب الرئوي</h4>
+    <table>
+      <tr><th>الجنس \ العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th></tr>
+      <tr><td>ذكور</td><td><input type="number" oninput="calculate('Pneumonia')"></td><td><input type="number" oninput="calculate('Pneumonia')"></td><td><input type="number" oninput="calculate('Pneumonia')"></td><td><input type="number" oninput="calculate('Pneumonia')"></td><td><input type="number" oninput="calculate('Pneumonia')"></td><td class="total" id="Pneumonia_maleTotal">0</td></tr>
+      <tr><td>إناث</td><td><input type="number" oninput="calculate('Pneumonia')"></td><td><input type="number" oninput="calculate('Pneumonia')"></td><td><input type="number" oninput="calculate('Pneumonia')"></td><td><input type="number" oninput="calculate('Pneumonia')"></td><td><input type="number" oninput="calculate('Pneumonia')"></td><td class="total" id="Pneumonia_femaleTotal">0</td></tr>
+      <tr class="total"><td>الإجمالي الكلي</td><td id="Pneumonia_t1">0</td><td id="Pneumonia_t2">0</td><td id="Pneumonia_t3">0</td><td id="Pneumonia_t4">0</td><td id="Pneumonia_t5">0</td><td id="Pneumonia_grandTotal">0</td></tr>
+    </table>
+  </div>
+
+  <!-- الانفلونزا -->
+  <div id="Influenza" class="subtabcontent">
+    <h4>الانفلونزا</h4>
+    <table>
+      <tr><th>الجنس \ العمر</th><th>&lt;1</th><th>1–4</th><th>5–14</th><th>15–45</th><th>45+</th><th>الإجمالي</th></tr>
+      <tr><td>ذكور</td><td><input type="number" oninput="calculate('Influenza')"></td><td><input type="number" oninput="calculate('Influenza')"></td><td><input type="number" oninput="calculate('Influenza')"></td><td><input type="number" oninput="calculate('Influenza')"></td><td><input type="number" oninput="calculate('Influenza')"></td><td class="total" id="Influenza_maleTotal">0</td></tr>
+      <tr><td>إناث</td><td><input type="number" oninput="calculate('Influenza')"></td><td><input type="number" oninput="calculate('Influenza')"></td><td><input type="number" oninput="calculate('Influenza')"></td><td><input type="number" oninput="calculate('Influenza')"></td><td><input type="number" oninput="calculate('Influenza')"></td><td class="total" id="Influenza_femaleTotal">0</td></tr>
+      <tr class="total"><td>الإجمالي الكلي</td><td id="Influenza_t1">0</td><td id="Influenza_t2">0</td><td id="Influenza_t3">0</td><td id="Influenza_t4">0</td><td id="Influenza_t5">0</td><td id="Influenza_grandTotal">0</td></tr>
+    </table>
+  </div>
+</div>
+
+  <div class="footer">
+    <div>مدير المرفق الصحي: ................................</div>
+    <div>مسؤول الإحصاء: ................................</div>
+  </div>
+
+</div>
+
+<script>
+// تسجيل الدخول
+function login() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  if(username==="admin" && password==="123456"){
+    document.getElementById("loginPage").style.display="none";
+    document.getElementById("dashboard").style.display="block";
+  } else {
+    alert("❌ اسم المستخدم أو كلمة المرور غير صحيحة");
+  }
+}
+
+// تبويبات رئيسية
+function openMainTab(evt, groupName){
+  const tabs=document.getElementsByClassName("tabcontent");
+  for(let i=0;i<tabs.length;i++) tabs[i].style.display="none";
+  const links=document.getElementsByClassName("mainTablinks");
+  for(let i=0;i<links.length;i++) links[i].classList.remove("active");
+  if(document.getElementById(groupName)) document.getElementById(groupName).style.display="block";
+  evt.currentTarget.classList.add("active");
+}
+
+// تبويبات فرعية
+function openSubTab(evt, subName){
+  const subcontent=evt.currentTarget.parentNode.parentNode.getElementsByClassName("subtabcontent");
+  for(let i=0;i<subcontent.length;i++) subcontent[i].style.display="none";
+  const sublinks=evt.currentTarget.parentNode.getElementsByClassName("subtablinks");
+  for(let i=0;i<sublinks.length;i++) sublinks[i].classList.remove("active");
+  if(document.getElementById(subName)) document.getElementById(subName).style.display="block";
+  evt.currentTarget.classList.add("active");
+}
+
+// حساب الإجماليات
+function calculate(tab){
+  const inputs=document.querySelectorAll("#"+tab+" input[type='number']");
+  let maleTotal=0,femaleTotal=0;
+  for(let i=0;i<5;i++) maleTotal+=Number(inputs[i].value||0);
+  for(let i=5;i<10;i++) femaleTotal+=Number(inputs[i].value||0);
+  document.getElementById(tab+"_maleTotal").innerText=maleTotal;
+  document.getElementById(tab+"_femaleTotal").innerText=femaleTotal;
+  for(let i=0;i<5;i++){
+    const totalByAge=Number(inputs[i].value||0)+Number(inputs[i+5].value||0);
+    document.getElementById(tab+"_t"+(i+1)).innerText=totalByAge;
+  }
+  document.getElementById(tab+"_grandTotal").innerText=maleTotal+femaleTotal;
+}
+
+// المديريات ديناميكي
+const districtsData = {
+  "اب": ["العدين","يريم","إب المدينة"],
+  "صنعاء": ["صنعاء القديمة","بني الحارث"],
+  "تعز": ["تعز المدينة","المعافر"]
+};
+function populateDistricts(){
+  const gov=document.getElementById("governorate").value;
+  const dist=document.getElementById("district");
+  dist.innerHTML="<option value=''>اختر المديرية</option>";
+  if(districtsData[gov]){
+    districtsData[gov].forEach(d=>{
+      dist.innerHTML += `<option value="${d}">${d}</option>`;
+    });
+  }
+}
+</script>
+
+</body>
+</html>
